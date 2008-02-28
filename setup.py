@@ -18,18 +18,19 @@ setup(
     version='0.1',
     author='Uli Fouquet',
     author_email='uli@gnufix.de',
-    url = 'http://svn.gnufix.de/repos/psj.policy',
+    url = 'https://svn.gnufix.de/repos/psj.policy',
     description='Plone Scientific Jounal - the site policy',
     long_description=long_description,
     license='GPL',
-    keywords="zope2 zope",
+    keywords="zope policy journal plone plone3",
     classifiers=['Development Status :: 3 - Alpha',
                  'Environment :: Web Environment',
                  'Intended Audience :: Developers',
                  'License :: OSI Approved :: Gnu Public License',
                  'Programming Language :: Python',
                  'Operating System :: OS Independent',
-                 'Framework :: Zope2',
+                 'Framework :: Plone',
+                 "Topic :: Software Development :: Libraries :: Python Modules",
                  ],
 
     packages=find_packages('src'),
@@ -37,6 +38,11 @@ setup(
     namespace_packages = ['psj'],
     include_package_data = True,
     zip_safe=False,
-    install_requires=['setuptools',
-                      ],
+    install_requires=[
+        'setuptools',
+        # -*- Extra requirements: -*-
+        ],
+    entry_points="""
+      # -*- Entry points: -*-
+      """,
 )
