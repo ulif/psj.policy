@@ -40,6 +40,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
+        'z3c.testsetup',
         # -*- Extra requirements: -*-
         ],
     entry_points="""
