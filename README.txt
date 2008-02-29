@@ -88,3 +88,7 @@ contents::
 
 If you happen to change the values in `buildout.cfg`, you have to
 'rebuild' the environment by running ``bin/buildout`` again.
+
+You can run the tests using something like::
+
+    $ bin/instance test -s psj.policy
