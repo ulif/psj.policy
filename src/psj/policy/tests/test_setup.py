@@ -19,18 +19,12 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##
+"""Test setup for psj.policy.
+"""
 
-import unittest
-
-from psj.policy.tests.base import PSJPolicyTestCase
-
-class TestSetup(PSJPolicyTestCase):
-    def test_portal_title(self):
-        self.assertEquals( "FooBar", self.portal.getProperty('title'))
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestSetup))
-    return suite
-
+# Needed for Python tests, that must provide a Plone test.
+from z3c.testsetup.plone.plonetesting import SimplePloneTestCase
+# The replacement for (normally) two files of code with many, many
+# lines:
+from z3c.testsetup.plone import PloneTestCollector
+test_suite = PloneTestCollector('psj.policy')
