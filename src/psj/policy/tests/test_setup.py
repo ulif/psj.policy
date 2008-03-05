@@ -23,8 +23,8 @@
 """
 
 # Needed for Python tests, that must provide a Plone test.
-from z3c.testsetup.plone.plonetesting import SimplePloneTestCase
+from ulif.plone.testsetup import SimplePloneTestCase
 # The replacement for (normally) two files of code with many, many
 # lines:
-from z3c.testsetup.plone import PloneTestCollector
-test_suite = PloneTestCollector('psj.policy')
+from ulif.plone.testsetup import register_all_plone_tests
+test_suite = register_all_plone_tests('psj.policy')

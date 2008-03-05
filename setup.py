@@ -40,7 +40,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
-        'z3c.testsetup',
+        'ulif.plone.testsetup',
         # -*- Extra requirements: -*-
         ],
     entry_points="""
