@@ -15,7 +15,7 @@ long_description = (
 
 setup(
     name='psj.policy',
-    version='0.1',
+    version='0.1.1dev',
     author='Uli Fouquet',
     author_email='uli@gnufix.de',
     url = 'https://svn.gnufix.de/repos/psj.policy',
