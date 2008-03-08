@@ -98,6 +98,9 @@ exists::
    >>> document.__del__() is None
    True
 
+Otherwise we would get an error here.
+
+
 Convert the virtual document to HTML
 ------------------------------------
 
@@ -105,4 +108,27 @@ First, we create the virtual document (again) and then call the
 ``convert`` method::
 
    >>> document = Document('myodtdoc', content_in)
-   >>> document.convert()
+   >>> output = document.convert()
+
+Note, that this work on POSIX compliant machines only!
+
+The ``output`` variable now contains our XHTML result::
+
+   >>> print output
+   <?xml version="1.0" encoding="utf-8"?>
+   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" ...>
+   <html xmlns="http://www.w3.org/1999/xhtml">...</html>
+
+This data should be equal to the data in ``testdoc1.html``::
+
+   >>> expected_data = open(expected_html, 'r').read()
+   >>> expected_data == output
+   True
+
+We also get a diff of both files::
+
+   >>> import difflib
+   >>> diff = difflib.unified_diff(expected_data.split('\n'),
+   ...                             output.split('\n'))
+   >>> list(diff)
+   []
