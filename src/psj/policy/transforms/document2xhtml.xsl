@@ -5,6 +5,7 @@
     Copyright (C) 2005-2006 J. David Eisenberg <catcode@catcode.com>
     Copyright (C) 2005-2006 Arend van Beelen jr. <arend@auton.nl>
     Copyright (C) 2006 Thierry Benita <tbenita@atreal.net>
+    Copyright (C) 2008 Uli Fouquet <uli@gnufix.de>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -71,7 +72,10 @@
 
 <xsl:key name="listTypes" match="text:list-style" use="@style:name" />
 
-<xsl:template match="/office:document">
+<xsl:template match="/office:document-content">
+  <xsl:call-template name="office-document" />
+</xsl:template>
+<xsl:template match="/office:document" name="office-document">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title><xsl:value-of select="$title"></xsl:value-of></title>
