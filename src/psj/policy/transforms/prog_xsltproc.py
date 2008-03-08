@@ -22,11 +22,13 @@
 """
 Converters powered by the external xsltproc helper.
 """
-from os.path import isdir
+import os
+from os.path import isdir, dirname, join, abspath
 from Products.PortalTransforms.libtransforms.commandtransform import (
     commandtransform,)
+from Products.PortalTransforms.libtransforms.utils import sansext
 
-
+XSL_STYLESHEET = abspath(join(dirname(__file__), 'document2xhtml.xsl'))
 
 class Document(commandtransform):
     """A document that can be processed with xsltproc.
@@ -37,10 +39,10 @@ class Document(commandtransform):
         Append '.odt' to filename if missing and create a temporary
         directory for conversion.
         """
-        commandtransform.__init__(self, name, binary='xsltproc')
-        name = self.name()
         if not name.lower().endswith('.odt'):
             name = name + '.odt'
+        commandtransform.__init__(self, name, binary='xsltproc')
+        name = self.name()
         self.tmpdir, self.fullname = self.initialize_tmpdir(
             data, filename=name)
         
@@ -60,3 +62,27 @@ class Document(commandtransform):
             basekeys.append(basekey)
             if hasattr(base, '__del__'):
                 base.__del__(self)
+
+    def convert(self):
+        """Convert the document to HTML.
+        """
+        if not os.name == 'posix':
+            return
+        name = self.name()
+        cmd = 'cd "%s" && unzip "%s" 2>unzip_error.log 1>/dev/null' % (
+            self.tmpdir, name)
+        os.system(cmd)
+        cmd = 'cd "%s" && %s --novalid "%s" content.xml > "%s.html" 2> "error.log"' % (
+            self.tmpdir, self.binary, XSL_STYLESHEET, sansext(name))
+        os.system(cmd)
+        try:
+            htmlfile = open(os.path.join(
+              self.tmpdir, "%s.html" % sansext(name)), 'r')
+            html = htmlfile.read()
+            htmlfile.close()
+        except:
+            try:
+                return open(os.path.join(self.tmpdir, 'unzip_error.log'), 'r').read()
+            except:
+                return ''
+        return html
