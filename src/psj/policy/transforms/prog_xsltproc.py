@@ -72,7 +72,9 @@ class Document(commandtransform):
         cmd = 'cd "%s" && unzip "%s" 2>unzip_error.log 1>/dev/null' % (
             self.tmpdir, name)
         os.system(cmd)
-        cmd = 'cd "%s" && %s --novalid "%s" content.xml > "%s.html" 2> "error.log"' % (
+        cmd = 'cd "%s" && %s --novalid "%s" content.xml '
+        cmd += '> "%s.html" 2> "error.log"'
+        cmd = cmd % (
             self.tmpdir, self.binary, XSL_STYLESHEET, sansext(name))
         os.system(cmd)
         try:
@@ -82,7 +84,8 @@ class Document(commandtransform):
             htmlfile.close()
         except:
             try:
-                return open(os.path.join(self.tmpdir, 'unzip_error.log'), 'r').read()
+                return open(os.path.join(self.tmpdir, 'unzip_error.log'),
+                            'r').read()
             except:
                 return ''
         return html
