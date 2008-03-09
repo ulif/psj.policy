@@ -24,3 +24,6 @@ class Odt2Html(object):
     """A transformation from OpenOffice docs to HTML.
     """
     pass
+
+def register():
+    return Odt2Html()

@@ -132,3 +132,30 @@ We also get a diff of both files::
    ...                             output.split('\n'))
    >>> list(diff)
    []
+
+All this is very well, but now we also want OOo documents
+automatically to be recognized and handled approprietely.
+
+
+Transform data from .odt files
+==============================
+
+Transformations, different to simple conversions, take care of MIME
+types and handle data in so-called `datastreams`. 
+
+We now want to *transform* the ``testdoc1.odt`` document. For this, we
+again get the raw data from the document::
+
+   >>> raw_odt = open(input_file_path).read()
+
+Furthermore, we pick up our transformation::
+
+   >>> from psj.policy.transforms import odt_to_html
+
+Then, we need a new 'datastream', in wich the results will be stored::
+
+   >>> from Products.PortalTransforms.data import datastream
+   >>> data = datastream('odt_to_html')
+
+Now we can perform the real conversion in a transformation context::
+
