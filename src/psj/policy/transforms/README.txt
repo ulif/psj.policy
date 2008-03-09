@@ -148,9 +148,20 @@ again get the raw data from the document::
 
    >>> raw_odt = open(input_file_path).read()
 
-Furthermore, we pick up our transformation::
+Furthermore, we pick up our transformation. It is defined in the
+``odt_to_html`` module, but we get an instance of the real
+transformation class by calling ``register()``
 
    >>> from psj.policy.transforms import odt_to_html
+   >>> transform = odt_to_html.register()
+   >>> transform
+   <psj.policy.transforms.odt_to_html.Odt2Html object at 0x...>
+
+A transform should alway implement ``itransform``::
+
+   >>> from Products.PortalTransforms.interfaces import itransform
+   >>> itransform.isImplementedBy(transform)
+   1
 
 Then, we need a new 'datastream', in wich the results will be stored::
 
