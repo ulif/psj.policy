@@ -24,8 +24,20 @@ from Products.PortalTransforms.interfaces import itransform
 class Odt2Html(object):
     """A transformation from OpenOffice docs to HTML.
     """
-    __implements__ = itransform    
+    __implements__ = itransform   # XXX this is Zope2 like ``itransform``
 
+    def name(self, name=None):
+        """Return the name of the transform instance
+
+        The second parameter is only here to satisfy the interface
+        requirements, which seem to be broken.
+        """
+        return 'odt_to_html'
+
+    def convert(self, data, cache, filename=None, **kwargs):
+        """Convert the data, store the result in idata and return that.
+        """
+        pass
 
 def register():
     return Odt2Html()

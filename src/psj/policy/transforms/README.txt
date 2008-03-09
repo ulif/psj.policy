@@ -163,6 +163,14 @@ A transform should alway implement ``itransform``::
    >>> itransform.isImplementedBy(transform)
    1
 
+   >>> from Interface.Verify import verifyObject
+   >>> verifyObject(itransform, transform)
+   1
+
+XXX: The interface implementations (and checks of them) here are old
+Zope 2, because ``itransform`` is. This should be fixed in
+``PortalTransforms``.
+
 Then, we need a new 'datastream', in wich the results will be stored::
 
    >>> from Products.PortalTransforms.data import datastream
