@@ -144,9 +144,12 @@ Transformations, different to simple conversions, take care of MIME
 types and handle data in so-called `datastreams`. 
 
 We now want to *transform* the ``testdoc1.odt`` document. For this, we
-again get the raw data from the document::
+must create a transformation object first, which afterwards can
+perform a transformation.
 
-   >>> raw_odt = open(input_file_path).read()
+
+Create a transformation
+-----------------------
 
 Furthermore, we pick up our transformation. It is defined in the
 ``odt_to_html`` module, but we get an instance of the real
@@ -171,10 +174,61 @@ XXX: The interface implementations (and checks of them) here are old
 Zope 2, because ``itransform`` is. This should be fixed in
 ``PortalTransforms``.
 
-Then, we need a new 'datastream', in wich the results will be stored::
+Transformations provide a name::
+
+   >>> transform.name()
+   'odt_to_html'
+
+Furthermore they provide a list of input MIME types, a single output
+MIME type and (some) an output encoding::
+
+   >>> transform.inputs
+   ('application/vnd.oasis.opendocument.text',)
+
+   >>> transform.output
+   'text/html'
+
+   >>> transform.output_encoding
+   'utf-8'
+
+
+Perform a transformation
+------------------------
+
+For this, we again get the raw data from the document::
+
+   >>> raw_odt = open(input_file_path).read()
+
+
+Then, we need a new 'datastream', in wich the results will be
+stored::
 
    >>> from Products.PortalTransforms.data import datastream
    >>> data = datastream('odt_to_html')
 
 Now we can perform the real conversion in a transformation context::
 
+   >>> res_data = transform.convert(raw_odt, data, 
+   ...                              filename='testdoc1.odt')
+
+Thre result stream should implement ``idatastream``::
+
+   >>> from Products.PortalTransforms.interfaces import idatastream
+   >>> idatastream.isImplementedBy(res_data)
+   1
+
+This stream can be read. We get the data::
+
+   >>> got = res_data.getData()
+   >>> print got
+   <?xml version="1.0" encoding="utf-8"?>
+   <!DOCTYPE ...>
+   <html ...>...</html>
+
+The result should look like the expected output we put in
+``tests/output/testdoc1.html``::
+
+   >>> diff = difflib.unified_diff(expected_data.split('\n'),
+   ...                             got.split('\n'))
+   >>> list(diff)
+   []
