@@ -25,10 +25,6 @@ transformation they perform, for instance ``odt_to_html``.
 While transformations call the converters to do the hard work, they
 store the results into cache of the Plone instance.
 
-We first have a look at the converter::
-
-   >>> from psj.policy.transforms.prog_xsltproc import Document
-
 All the testfiles we want to compare reside in the ``tests``
 subdirectory::
 
@@ -43,14 +39,18 @@ First we want to compare two files called ``testdoc1``::
    >>> expected_text = join(output_path, 'testdoc1.txt')
 
 
-Create a virtual odt document
------------------------------
+Create a virtual odt document (with xsltproc)
+---------------------------------------------
 
 To perform a conversion, we must create a document object first. This
 is done by passing a document name (normally a filename) and the file
-content to the constructor::
+content to the constructor. We get the file contents::
 
    >>> content_in = r'' + open(input_file_path, 'rb').read()
+
+Now, let's have a look at the converter::
+
+   >>> from psj.policy.transforms.prog_xsltproc import Document
    >>> document = Document('myodtdoc.odt', content_in)
    >>> document
    <psj.policy.transforms.prog_xsltproc.Document instance at 0x...>
@@ -101,16 +101,77 @@ exists::
 Otherwise we would get an error here.
 
 
+Create a virtual odt document (with xslttrans)
+----------------------------------------------
+
+There is another module that we can use for XSLT transforms. While
+``xsltproc`` used in the above section is an external binary, that
+must be available at runtime, we can archive the same effect by using
+the Python ``lxml`` module (version >= 2). One of the major advances
+of this transformation is, that is does not need external binaries and
+does also work on non-POSIX-compliant machines.
+
+A transfrom using this module is defined in ``xslttrans.py``. It also
+provides a ``Document`` class::
+
+   >>> from psj.policy.transforms.xslttrans import Document
+
+When we create a virtual XSLT document here, we must give an XSLT
+stylesheet, which defines the real transformation from XML to, for
+example, HTML::
+
+   >>> stylesheet = os.path.join(
+   ...     os.path.dirname(__file__), 'document2xhtml.xsl')
+
+Now we can create the virtual document like this::
+
+   >>> document = Document('myfile.odt', content_in,
+   ...                     xsl_stylesheet_path=stylesheet)
+   >>> document
+    <psj.policy.transforms.xslttrans.Document instance at 0x...>
+
+This type of document provides a ``fullname`` and a ``tmpdir``. What
+
+   >>> document.fullname.endswith('myfile.odt')
+   True
+
+   >>> isinstance(document.tmpdir, basestring)
+   True
+
+When a document is not needed anymore, the temporary directory will be
+removed (this, unfortunately, is not a default behaviour and a
+security risk if not done properly)::
+
+   >>> tmp_path = document.tmpdir
+   >>> os.path.isdir(tmp_path)
+   True
+
+   >>> del document
+   >>> os.path.isdir(tmp_path)
+   False
+
+The destructor also checks, whether the temporary directory still
+exists::
+
+   >>> document = Document('myodtdoc.doc', content_in)
+   >>> from shutil import rmtree
+   >>> rmtree(document.tmpdir)
+   >>> document.__del__() is None
+   True
+
+Otherwise we would get an error here.
+
+
 Convert the virtual document to HTML
 ------------------------------------
 
-First, we create the virtual document (again) and then call the
-``convert`` method::
+We can now call the converter, to retrieve a transformed
+document. Which transformation is done, depends on the XSL stylesheet
+given. In our case it should be HTML::
 
-   >>> document = Document('myodtdoc', content_in)
+   >>> document = Document('myodtdoc', content_in,
+   ...                     xsl_stylesheet_path=stylesheet)
    >>> output = document.convert()
-
-Note, that this work on POSIX compliant machines only!
 
 The ``output`` variable now contains our XHTML result::
 
