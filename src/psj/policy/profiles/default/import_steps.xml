@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<import-steps>
+  <import-step id="portal-transforms-various" version="20080310-01"
+	       handler="psj.policy.setuphandlers.setupPSJSite"
+	       title="PSJ site setup">
+    <!-- dependency step="componentregistry"/ -->
+    PSJ site installation step.
+  </import-step>
+</import-steps>
