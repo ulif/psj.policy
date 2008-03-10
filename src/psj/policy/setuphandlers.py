@@ -23,9 +23,12 @@
 """
 
 from Products.CMFCore.utils import getToolByName
+import transaction
 
 from StringIO import StringIO
 from types import InstanceType
+
+PRODUCT_DEPENDENCIES = ('ARFilePreview',)
 
 def registerTransform(site, out, name, module):
     transforms = getToolByName(site, 'portal_transforms')
@@ -40,6 +43,17 @@ def unregisterTransform(site, out, name):
     except AttributeError:
         print >> out, "Could not remove transform", name, "(not found)"
 
+def register_products(site, out, reinstall=False):
+    quickinstaller = getToolByName(site, 'portal_quickinstaller')
+    for product in PRODUCT_DEPENDENCIES:
+        if reinstall and quickinstaller.isProductInstalled(product):
+            quickinstaller.reinstallProducts([product])
+            transaction.savepoint()
+        elif not quickinstaller.isProductInstalled(product):
+            quickinstaller.installProducts([product])
+            transaction.savepoint()
+    return
+
 def install(site):
     """Install psj stuff.
     """
@@ -51,6 +65,9 @@ def install(site):
         ('odt_to_html', 'psj.policy.transforms.odt_to_html'),]:
 
         registerTransform(site, out, name, module)
+
+    # Register additional products
+    register_products(site, out)
     return out.getvalue()
 
 def uninstall(site):

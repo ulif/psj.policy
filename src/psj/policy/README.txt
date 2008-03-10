@@ -26,9 +26,7 @@ This package defines some special transforms::
    >>> from psj.policy.transforms import odt_to_html
 
    >>> from Products.CMFCore.utils import getToolByName
-   >>> #transforms = getToolByName(self.portal, 'portal_transforms')
    >>> transforms = self.portal.portal_transforms
-   >>> #transforms.registerTransform(odt_to_html.register())
    >>> transforms
    <TransformTool at /plone/portal_transforms>
 
@@ -56,3 +54,17 @@ It delivers text/html::
 
    >>> odt_transform.output
    'text/html'
+
+
+Preview of files
+================
+
+As a convenience for development we provide a file preview for file
+contents. Note, that this is subject to change. The preview
+functionality, which is currently provided by the external
+ARFilePreview product, might be replaced by an own content type. Here
+we only check, whether it is available after setup::
+
+   >>> portal_installer = self.portal.portal_quickinstaller
+   >>> portal_installer.isProductInstalled('ARFilePreview')
+   True
