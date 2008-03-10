@@ -42,6 +42,7 @@ setup(
         'setuptools',
         'ulif.plone.testsetup',
         # -*- Extra requirements: -*-
+        'lxml',
         ],
     entry_points="""
       # -*- Entry points: -*-
