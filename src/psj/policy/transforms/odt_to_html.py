@@ -20,8 +20,11 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##
 import os
+from os.path import dirname, join, abspath
 from Products.PortalTransforms.interfaces import itransform
-from psj.policy.transforms.prog_xsltproc import Document
+from psj.policy.transforms.xslttrans import Document
+
+XSL_STYLESHEET = abspath(join(dirname(__file__), 'document2xhtml.xsl'))
 
 class Odt2Html(object):
     """A transformation from OpenOffice docs to HTML.
@@ -44,9 +47,10 @@ class Odt2Html(object):
         """Convert the data, store the result in idata and return that.
         """
         filename = filename or 'unknown.odt'
+        if not filename.lower().endswith('.odt'):
+            filename += '.odt'
         document = Document(filename, data)
         html = document.convert()
-
         sub_objects_paths = [document.tmpdir,
                              os.path.join(document.tmpdir, 'Pictures')]
         for path in sub_objects_paths:
