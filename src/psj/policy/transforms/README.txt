@@ -5,8 +5,77 @@ psj.policy.transforms
 :Test-Layer: unit
 
 One of the major aims of Plone Scientific Journal sites is, to process
-content, that was delivered in .odt or .doc formats. Transforms are
+content, that was delivered in .odt or .docx formats. Transforms are
 the Plone way to handle such 'external' document formats.
+
+Currently supported is a set of transformations for XML based document
+formats like OpenOffice.orgs `.odt` and Microsofts `.docx`
+format. Those formats share the attribute to be in fact zipped XML
+files.
+
+The current transformations provided are:
+
+- odt to HTML via lxml.
+
+- docx to HTML via lxml.
+
+The ``lxml`` library is a Python library that offers direct access to
+systems' libxml2 and libxslt. The external `xsltproc` program, often
+needed by other packages is not needed with `psj.policy` any more.
+
+XSLT transformations
+====================
+
+XSLT stylesheets provide a set of rules to apply on an XML
+file. Normally they provide substitutions that for example turn plain
+XML into XHTML or similar.
+
+The transoformations in the ``psj.policy`` package are performed by a
+litte function in the ``xslttrans`` module::
+
+   >>> from psj.policy.transforms.xslttrans import xslt_transform
+
+This function expects two filedescriptors: the first for the XSLT
+stylesheet, the second for the document, to which the stylesheet
+should be applied. We create both::
+
+   >>> xslt = '''<?xml version="1.0"?>
+   ... <xsl:stylesheet version="1.0"
+   ...     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+   ...   <xsl:output method = "xml"
+   ...       encoding = "utf-8"
+   ...       media-type = "application/xhtml+xml"
+   ...       indent = "no"
+   ...       doctype-public = "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   ...   />
+   ...   <xsl:template match="/document">
+   ...   <html><head><title>Test</title></head><body>
+   ...     <h1>Hello!</h1>
+   ...     <xsl:apply-templates />
+   ...   </body></html>
+   ...   </xsl:template>
+   ... </xsl:stylesheet>
+   ... '''
+
+   >>> xml = '''<?xml version="1.0"?>
+   ... <document>Blah</document>
+   ... '''
+
+We fake the filedescriptors using ``StringIO`` streams and call the
+transformation engine::
+
+   >>> from StringIO import StringIO
+   >>> res = xslt_transform(StringIO(xslt), StringIO(xml))
+   >>> res
+   <lxml.etree._XSLTResultTree object at 0x...>
+
+The generated document is available as string representation of the
+result::
+
+   >>> print str(res)
+   <?xml version="1.0" encoding="utf-8"?>
+   ...<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+   ...<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Test</title></head><body><h1>Hello!</h1>Blah</body></html>
 
 Convert .odt to HTML
 ====================
@@ -17,8 +86,14 @@ transformation is handled by the ``Odt2Html`` class::
    >>> from psj.policy.transforms.odt_to_html import Odt2Html
 
 But this class in fact is merely a wrapper around the real document
-converter defined in the ``cmd_xsltproc.Document`` class. All
-converters that run external commands in here are named
+converter defined in the ``xslttrans.Document`` class. This converter
+is used by default for odt-to-HTML transformations.
+
+We provide, however, also a converter, that uses an external programme
+called ``xsltproc``, which normally comes with libxml/libxslt. This
+converter is defined in ``cmd_xsltproc.Document``.
+
+All converters that run external commands in here are named
 ``cmd_<progname>``, while all transformers are named after the
 transformation they perform, for instance ``odt_to_html``.
 

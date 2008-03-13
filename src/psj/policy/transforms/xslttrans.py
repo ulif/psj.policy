@@ -29,6 +29,9 @@ actual transformation.
 The output is determined by the XSL stylesheet and can be any
 format. Most usual, however, are HTML and plain text.
 
+The default XSL stylesheets and document paths used here apply to OOo
+documents.
+
 """
 import os
 from os.path import isdir, dirname, join, abspath
@@ -40,20 +43,32 @@ from Products.PortalTransforms.libtransforms.utils import sansext
 
 XSL_STYLESHEET = abspath(join(dirname(__file__), 'document2xhtml.xsl'))
 
+def xslt_transform(stylesheet, xml_doc):
+    """Transform a document using ans XSLT stylesheet.
+    """
+    xslt_doc = etree.parse(stylesheet)
+    transform = etree.XSLT(xslt_doc)
+    doc = etree.parse(xml_doc)
+    return transform(doc)
+
+
 class Document(commandtransform):
     """A document that can be unzipped and processed with lxml.
     """
 
-    xsl_stylesheet = XSL_STYLESHEET
+    xsl_stylesheet_path = XSL_STYLESHEET
+    xml_doc_path = 'content.xml'
 
     def __init__(self, name, data,
-                 xsl_stylesheet_path=XSL_STYLESHEET):
+                 xsl_stylesheet_path=None,
+                 xml_doc_path = None):
         """Initialize document.
 
-        Store stylesheet and other important data, the reate a
+        Store stylesheet and other important data, then create a
         temporary directory for conversion.
         """
-        self.xsl_stylesheet = xsl_stylesheet_path
+        self.xsl_stylesheet = xsl_stylesheet_path or self.xsl_stylesheet_path
+        self.xml_doc = xml_doc_path or self.xml_doc_path
         commandtransform.__init__(self, name)
         name = self.name()
         self.tmpdir, self.fullname = self.initialize_tmpdir(
@@ -86,9 +101,10 @@ class Document(commandtransform):
         os.system(cmd)
 
         # Do the transformation...
-        xslt_doc = etree.parse(open(XSL_STYLESHEET, 'r'))
-        xslt_transform = etree.XSLT(xslt_doc)
-        doc = etree.parse(open(os.path.join(self.tmpdir,
-                                            'content.xml'), 'r'))
-        result = str(xslt_transform(doc))
+        stylesheet = open(self.xsl_stylesheet_path, 'r')
+        xml_doc = open(os.path.join(self.tmpdir, self.xml_doc_path), 'r')
+        result = str(xslt_transform(
+            stylesheet, xml_doc))
+        xml_doc.close()
+        stylesheet.close()
         return result
