@@ -125,10 +125,10 @@ content to the constructor. We get the file contents::
 
 Now, let's have a look at the converter::
 
-   >>> from psj.policy.transforms.prog_xsltproc import Document
+   >>> from psj.policy.transforms.cmd_xsltproc import Document
    >>> document = Document('myodtdoc.odt', content_in)
    >>> document
-   <psj.policy.transforms.prog_xsltproc.Document instance at 0x...>
+   <psj.policy.transforms.cmd_xsltproc.Document instance at 0x...>
 
 Note, that we gave a different 'filename' (``myodtdoc.odt``, than the
 original filename (``testdoc1.odt``). That does not matter, because
