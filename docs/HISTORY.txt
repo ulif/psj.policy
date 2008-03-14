@@ -12,6 +12,8 @@ Bug fixes
 Feature changes
 ---------------
 
+* Added start/stop scripts for OOo server (UN*X only).
+
 * Added standalone converter that uses OOo in background.
 
 * Added openoffice buildout recipe.
