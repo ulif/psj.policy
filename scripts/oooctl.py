@@ -158,7 +158,7 @@ def stop():
     print "Bye."
 
 def usage():
-    return '''Usage: %s [start|stop|restart]
+    return '''Usage: %s [start|stop|restart|status]
 
     Commands:
 
@@ -167,6 +167,8 @@ def usage():
       stop:   stops an OpenOffice.org server instance.
 
       restart: restarts an OpenOffice.org server instance.
+
+      status: tell status of server process.
 
     Without any command this help is printed.
     ''' % sys.argv[0]
@@ -184,7 +186,7 @@ def main(argv=sys.argv):
         print "Going into background..."
         startstop(pidfile='/tmp/ooodaeomon.pid', action='start')
         start()
-    elif cmd in ['stop', 'restart']:
+    elif cmd in ['stop', 'restart', 'status']:
         startstop(pidfile='/tmp/ooodaeomon.pid', action=cmd)
     elif cmd:
         print "Unknown command: %s" % cmd
