@@ -172,6 +172,9 @@ def usage():
     ''' % sys.argv[0]
 
 def main(argv=sys.argv):
+    if os.name != 'posix':
+        print "This script only works on POSIX compliant machines."
+        sys.exit(-1)
     if not os.path.isfile(OOO_BINARY):
         raise IOError('No such file: %s'% OOO_BINARY)
     cmd = None
