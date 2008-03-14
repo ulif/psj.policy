@@ -46,5 +46,7 @@ setup(
         ],
     entry_points="""
       # -*- Entry points: -*-
+      [console_scripts]
+      ooo_convert = psj.policy.bin.ooo_convert:main
       """,
 )
