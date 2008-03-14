@@ -4,6 +4,19 @@ Changelog
 0.2 (unreleased)
 ================
 
+Bug fixes
+---------
+
+* Pinned down plone version: > 3.0 < 3.1dev.
+
+Feature changes
+---------------
+
+* Added openoffice buildout recipe.
+
+* Added PILwoTK in buildout. This is a PIL package that really works
+  with buildout.
+
 
 0.1 (2008-03-06)
 ================
