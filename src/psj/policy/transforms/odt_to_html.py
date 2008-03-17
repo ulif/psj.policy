@@ -22,7 +22,8 @@
 import os
 from os.path import dirname, join, abspath
 from Products.PortalTransforms.interfaces import itransform
-from psj.policy.transforms.xslttrans import Document
+#from psj.policy.transforms.xslttrans import Document
+from psj.policy.transforms.cmd_oooconv import Document
 
 XSL_STYLESHEET = abspath(join(dirname(__file__), 'document2xhtml.xsl'))
 
