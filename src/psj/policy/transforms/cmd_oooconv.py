@@ -68,7 +68,7 @@ class Document(commandtransform):
         name = self.name()
         curr_path = os.getcwd()
         os.chdir(self.tmpdir)
-        ooo_convert.convert_to_html(paths=[name])
+        ooo_convert.convert_to_html(path=name)
         
         htmlfile = open(os.path.join(
             self.tmpdir, "%s.html" % sansext(name)), 'r')
