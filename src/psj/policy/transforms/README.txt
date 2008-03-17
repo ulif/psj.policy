@@ -17,6 +17,8 @@ The current transformations provided are:
 
 - odt to HTML via lxml.
 
+- odt to HTML via OpenOffice.org (OOo)
+
 - docx to HTML via lxml.
 
 The ``lxml`` library is a Python library that offers direct access to
@@ -255,8 +257,9 @@ The ``output`` variable now contains our XHTML result::
    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" ...>
    <html xmlns="http://www.w3.org/1999/xhtml">...</html>
 
-This data should be equal to the data in ``testdoc1.html``::
+This data should be equal to the data in ``testdoc1-xslttrans.html``::
 
+   >>> expected_html = join(output_path, 'testdoc1-xslttrans.html')
    >>> expected_data = open(expected_html, 'r').read()
    >>> expected_data == output
    True
@@ -357,13 +360,16 @@ This stream can be read. We get the data::
 
    >>> got = res_data.getData()
    >>> print got
-   <?xml version="1.0" encoding="utf-8"?>
-   <!DOCTYPE ...>
-   <html ...>...</html>
+   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+   <HTML>
+   ...
+   </HTML>
 
 The result should look like the expected output we put in
 ``tests/output/testdoc1.html``::
 
+   >>> expected_html = join(output_path, 'testdoc1.html')
+   >>> expected_data = open(expected_html, 'r').read()
    >>> diff = difflib.unified_diff(expected_data.split('\n'),
    ...                             got.split('\n'))
    >>> list(diff)
