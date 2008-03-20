@@ -138,7 +138,6 @@ def convert(
                     (dest, ext) = splitext(path)
                     dest = dest + "." + extension
                     destUrl = absolutize(cwd, systemPathToFileUrl(dest))
-                    sys.stderr.write(destUrl + "\n")
                     doc.storeToURL(destUrl, outProps)
 		else:
 		    doc.storeToURL("private:stream",outProps)
