@@ -80,15 +80,53 @@ def convert(
     paths=[]):
     """Do the real conversion.
     """
-    # This deferred imports and in-class definitions are due to the
-    # Plone test runner, which seems to have problems with pyuno
-    # loaded at testing time.
+    # See head of file for what's happening here.
     register_uno_import()
-    from unohelper import Base, systemPathToFileUrl, absolutize
+    from pyuno import systemPathToFileUrl, absolutize
+    from com.sun.star.lang import XTypeProvider
     from com.sun.star.beans import PropertyValue
     from com.sun.star.uno import Exception as UnoException
     from com.sun.star.io import IOException, XOutputStream
     unregister_uno_import()
+
+    # never shrinks !
+    _g_typeTable = {}
+    def _unohelper_getHandle(self):
+        """Helper function from unohelper.py.
+        """
+        ret = None
+        if _g_typeTable.has_key(self.__class__):
+            ret = _g_typeTable[self.__class__]
+        else:
+            names = {}
+            traverse = list(self.__class__.__bases__)
+            while len(traverse) > 0:
+                item = traverse.pop()
+                bases = item.__bases__
+                if uno.isInterface(item):
+                    names[item.__pyunointerface__] = None
+                elif len(bases) > 0:
+                    # the "else if", because we only need the most
+                    # derived interface
+                    traverse = traverse + list(bases)#
+
+            lst = names.keys()
+            types = []
+            for x in lst:
+                t = uno.getTypeByName(x)
+                types.append(t)
+
+            ret = tuple(types) , uno.generateUuid()
+            _g_typeTable[self.__class__] = ret
+        return ret
+
+    class Base(XTypeProvider):
+        """Helper class from unohelper.py.
+        """
+        def getTypes(self):
+            return _unohelper_getHandle(self)[0]
+        def getImplementationId(self):
+            return _unohelper_getHandle(self)[1]
 
     class OutputStream(Base, XOutputStream):
         def __init__(self):
