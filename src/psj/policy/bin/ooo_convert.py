@@ -142,13 +142,10 @@ def convert(
 		else:
 		    doc.storeToURL("private:stream",outProps)
             except IOException, e:
-                sys.stderr.write(
-                    "Error during conversion: " + e.Message + "\n")
+                print "Error during conversion: ", e.Message
                 ret_val = 1
             except UnoException, e:
-                sys.stderr.write(
-                    "Error ("+repr(
-                    e.__class__)+") during conversion:" + e.Message + "\n")
+                print "UnoError during conversion: ", e.__class__, e.Message
                 ret_val = 1
             if doc:
                 doc.dispose()
