@@ -152,7 +152,7 @@ def start():
     cmd = "%s %s %s" % (
         OOO_BINARY,
         '"-accept=socket,host=localhost,port=2002;urp;"',
-        '-headless -nologo -nofirststart -norestore')
+        '-headless -nologo -nofirststartwizard -norestore')
     os.system(cmd)
 
 def stop():
