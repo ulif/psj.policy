@@ -1,5 +1,8 @@
 psj.policy Installation
-==========================
+***********************
+
+How to install psj.policy inside another package
+================================================
 
 To install psj.policy into the global Python environment (or a workingenv),
 using a traditional Zope 2 instance, you can do this:
@@ -50,3 +53,181 @@ recipe to manage your project, you can do this:
         
 You can skip the ZCML slug if you are going to explicitly include the package
 from another package's configure.zcml file.
+
+Note, that the real installation is quite cumbersome, because it is
+based on the collaboration with OpenOffice.org. See below to see, how
+you can install psj.policy in detail.
+
+
+Installing psj.policy via ``buildout``
+======================================
+
+We describe an installation on a freshly installed Ubuntu
+system. Windows(TM) systems are not supported by time of writing
+this.
+
+1) Install the base system.
+
+  We are using Ubuntu 6.06 server with LTS (Long time support)
+  here. This means less stuff on your machine. The whole system
+  described below will need less than 2.5 GB disk space.
+
+  Make sure you choose `English (US)` as base system. Otherwise you
+  will have to tweak the tests lateron. This is caused by OOos
+  'intelligent' locale detection, which produces different documents
+  depending on your system locale. The tests here rely on the US
+  locale.
+
+  Afterwards setup ``/etc/apt/sources.list`` so, that universe and
+  multiverse repositories are included.
+
+  Then, as superuser, run::
+
+     # apt-get update
+
+  to fetch the list of the newly added repositories.
+
+  During base install we created a user `zope`.
+
+2) Install additional packages:
+
+  We need Python2.4. On our system this is the default version,
+  already installed on base systems so we only have to do::
+
+     # apt-get install python2.4-dev
+
+  to get the headers for building Zope. More current distributions
+  often come with Python2.5 as default and do not offer any Python2.4
+  packages any more. In this case you have to grab the sources from
+  the net and install Python2.4 by yourself.
+
+  After Python is installed, you should be able to type::
+
+     $ python2.4
+
+  without an error message.
+
+  Then, as superuser, do::
+
+     # apt-get install subversion rpm unzip gcc libc6-dev \
+                       libxslt1.1 libxslt1-dev xsltproc \
+                       libsm6 sun-java5-bin
+
+  These are the generally needed packages for building and running
+  ``psj.policy``. Some may be already installed on your
+  system. Concerning the Java package (above Sun Java 1.5 is
+  installed) you might get along with a different one.
+
+  We also install:: 
+
+     # apt-get install openssh-server
+
+  to be able access the machine remotely.
+
+  The Ubuntu server packages do not come with a preinstalled
+  X-server. This makes sense for a machine on the net, but OOo needs
+  some X-environment, even if none is using it. We therefore install a
+  fake X-Server::
+
+     # apt-get install xvfb
+
+3) Fetch, build and install ``psj.policy``
+
+  Now it's time to get the real code. As a normal user do::
+
+     $ svn co https://svn.gnufix.de/repos/psj.policy/trunk \
+              psj.policy
+
+  This should populate your directory with a new subdir
+  ``psj.policy``. Now change to it and run the bootstrapper::
+
+     $ cd psj.policy
+     $ python2.4 bootstrap/bootstrap.py
+
+  This will create the ``buildout`` script and some subdirs. Run the
+  buildout script::
+
+     $ ./bin/buildout
+
+  It will take a long time, because it has to fetch many, many
+  packages and also a complete openoffice package of about 130 MB.
+
+  To make the freshly created uno package available, you have to
+  register the libs in the ``parts/openoffice/program``
+  directory. This can be done as superuser::
+
+     # ldconfig /home/zope/psj.policy/parts/openoffice/program
+
+  or whatever the path on your system looks like.
+
+  When you're done, the following should work without error::
+
+     $ ./bin/zopepy
+     
+     >>> import uno
+
+  What will *not* work, is the following::
+
+     $ ./bin/zopepy
+
+     >>> from lxml import etree
+
+  This is, because OOo comes with (rather old) replacements for the
+  XSLT and XML2 libs, which are normally already installed (in newer
+  versions) on a recent Linux system. Therefore, we **remove** those
+  OOo libs:: 
+
+     $ rm parts/openoffice/program/libxslt.so*
+     $ rm parts/openoffice/program/libxml2.so*
+
+  Afterwards, both examples mentioned above should work.
+
+4) Fake registration of OOo
+
+  If you are running a system with full-featured X-server, then you
+  can skip this step.
+
+  There is one problem with registration of OOo: it's a graphical
+  process, where you have to click some things on the screen. This
+  process is required even for starting it as a background
+  server. Normally you need a full-blown X-server for such actions,
+  but we didn't want to install such a thing only for a simple
+  registration process. So we decided to run the registration process
+  on another machine, where full X was installed, and copied the
+  created ``.openoffice2/`` directory from the remotes users home dir
+  into our own. This makes OOo think, you already did the registration
+  and won't bother you with any questions.
+
+5) Start the Fake X-server
+
+  If you are running a system with full-featured X-server, then you
+  can skip this step.
+
+  We installed an framebuffer device server above. This serves our
+  needs quite fine. Now it's time to start it::
+
+     $ Xvfb :3 -ac -screen sn 800x600x16 &
+
+6) Start the OOo server
+
+  Afterwards we should be able to start the OOo server. If you are
+  using the Xvfb server, use::
+
+     $ ./parts/openoffice/program/soffice \
+          "-accept=socket,host=localhost,port=2002;urp;" \
+          -display :3 &
+
+  If you are **not** using the Xvfb server but a 'real' X server, then
+  do instead:: 
+
+     $ ./bin/oooctl start
+
+  We're working on autodetecting the X server status, so that on the
+  long run only the latter will be needed.
+
+7) Test the code
+
+  Run::
+
+     $ ./bin/instance test -s psj.policy
+
