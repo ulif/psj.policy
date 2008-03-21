@@ -124,12 +124,6 @@ this.
 
   to be able access the machine remotely.
 
-  The Ubuntu server packages do not come with a preinstalled
-  X-server. This makes sense for a machine on the net, but OOo needs
-  some X-environment, even if none is using it. We therefore install a
-  fake X-Server::
-
-     # apt-get install xvfb
 
 3) Fetch, build and install ``psj.policy``
 
@@ -182,50 +176,15 @@ this.
 
   Afterwards, both examples mentioned above should work.
 
-4) Fake registration of OOo
 
-  If you are running a system with full-featured X-server, then you
-  can skip this step.
+4) Start the OOo server
 
-  There is one problem with registration of OOo: it's a graphical
-  process, where you have to click some things on the screen. This
-  process is required even for starting it as a background
-  server. Normally you need a full-blown X-server for such actions,
-  but we didn't want to install such a thing only for a simple
-  registration process. So we decided to run the registration process
-  on another machine, where full X was installed, and copied the
-  created ``.openoffice2/`` directory from the remotes users home dir
-  into our own. This makes OOo think, you already did the registration
-  and won't bother you with any questions.
-
-5) Start the Fake X-server
-
-  If you are running a system with full-featured X-server, then you
-  can skip this step.
-
-  We installed an framebuffer device server above. This serves our
-  needs quite fine. Now it's time to start it::
-
-     $ Xvfb :3 -ac -screen sn 800x600x16 &
-
-6) Start the OOo server
-
-  Afterwards we should be able to start the OOo server. If you are
-  using the Xvfb server, use::
-
-     $ ./parts/openoffice/program/soffice \
-          "-accept=socket,host=localhost,port=2002;urp;" \
-          -display :3 &
-
-  If you are **not** using the Xvfb server but a 'real' X server, then
-  do instead:: 
+  Now we should be able to start the OOo server::
 
      $ ./bin/oooctl start
 
-  We're working on autodetecting the X server status, so that on the
-  long run only the latter will be needed.
 
-7) Test the code
+5) Test the code
 
   Run::
 
