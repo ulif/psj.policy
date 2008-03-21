@@ -149,9 +149,10 @@ def startstop(stdout='/dev/null', stderr=None, stdin='/dev/null',
 
 def start():
     print "Starting OpenOffice.org server..."    
-    cmd = "%s %s" % (
+    cmd = "%s %s %s" % (
         OOO_BINARY,
-        '"-accept=socket,host=localhost,port=2002;urp;"')
+        '"-accept=socket,host=localhost,port=2002;urp;"',
+        '-headless -nologo -nofirststart -norestore')
     os.system(cmd)
 
 def stop():
