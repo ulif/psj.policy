@@ -35,7 +35,7 @@ def registerTransform(site, out, name, module):
     try:
         transforms.manage_addTransform(name, module)
         print >> out, "Registered transform", name
-    except AttributeError:
+    except:
         print >> out, "Transform %s already registered. Try reregister." % name
         transforms.unregister(name)
         transforms.manage_addTransform(name, module)
