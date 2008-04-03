@@ -28,7 +28,7 @@ import transaction
 from StringIO import StringIO
 from types import InstanceType
 
-PRODUCT_DEPENDENCIES = ('ARFilePreview',)
+PRODUCT_DEPENDENCIES = ()
 
 def registerTransform(site, out, name, module):
     transforms = getToolByName(site, 'portal_transforms')
