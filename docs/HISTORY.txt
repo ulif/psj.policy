@@ -1,8 +1,23 @@
 Changelog
 *********
 
-0.2 (unreleased)
-================
+0.1.2 (unreleased)
+==================
+
+Bug fixes
+---------
+
+* Improved transform initialization to cope with already installed
+  transforms of same names. Those are now unregistered first.
+
+Feature changes
+---------------
+
+* Added script for preparing/restoring libs (UN*X only).
+
+
+0.1.1 (2008-03-22)
+==================
 
 Bug fixes
 ---------
