@@ -365,6 +365,15 @@ This stream can be read. We get the data::
    ...
    </HTML>
 
+There should be no 'HTML encoding' of characters, because users will
+search the catalog for 'Äpfel' and not '&Auml;pfel'::
+
+   >>> 'w&uuml;nscht' in got
+   False
+
+   >>> 'wünscht' in got
+   True
+
 The result should look like the expected output we put in
 ``tests/output/testdoc1.html``::
 
