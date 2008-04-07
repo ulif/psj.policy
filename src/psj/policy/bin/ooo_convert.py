@@ -51,6 +51,8 @@ unregister_uno_import()
 
 def convert_to_html(
     url="uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext",
+    # A list of internal filter names can be obtained at:
+    # http://wiki.services.openoffice.org/wiki/Framework/Article/Filter/FilterList_SO_8
     #filter_name="HTML (StarWriter)",
     filter_name="XHTML Writer File",
     extension="html",
