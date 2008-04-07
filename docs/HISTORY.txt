@@ -7,6 +7,8 @@ Changelog
 Bug fixes
 ---------
 
+* Enabled XHTML-1.0 output instead of HTML.
+
 * Improved transform initialization to cope with already installed
   transforms of same names. Those are now unregistered first.
 
