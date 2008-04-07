@@ -360,10 +360,10 @@ This stream can be read. We get the data::
 
    >>> got = res_data.getData()
    >>> print got
-   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-   <HTML>
+   <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html ...>
+   <html xmlns="...">
    ...
-   </HTML>
+   ...</html>
 
 There should be no 'HTML encoding' of characters, because users will
 search the catalog for 'Äpfel' and not '&Auml;pfel'::
@@ -375,10 +375,25 @@ search the catalog for 'Äpfel' and not '&Auml;pfel'::
    True
 
 The result should look like the expected output we put in
-``tests/output/testdoc1.html``::
+``tests/output/testdoc1.html``. There is a problem with numeric
+attributes like '2.5cm' which might differ from machine to machine and
+references to resources like image links. Those might link to any
+temporary directory/file different from run to run. So we define a
+function that strips that values and references::
+
+   >>> import re
+   >>> def rip_out_num_vals(text):
+   ...     r = re.compile('([0-9]?\.)?[0-9]+((cm)|(in)|(pt))')
+   ...     result = r.sub('', text)
+   ...     result = re.compile('src="[^"]+"').sub('', result)
+   ...     return result
 
    >>> expected_html = join(output_path, 'testdoc1.html')
    >>> expected_data = open(expected_html, 'r').read()
+
+   >>> expected_data = rip_out_num_vals(expected_data)
+   >>> got = rip_out_num_vals(got)
+   
    >>> diff = difflib.unified_diff(expected_data.split('\n'),
    ...                             got.split('\n'))
    >>> list(diff)

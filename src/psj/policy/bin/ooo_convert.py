@@ -51,10 +51,11 @@ unregister_uno_import()
 
 def convert_to_html(
     url="uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext",
-    filter_name="HTML (StarWriter)",
+    #filter_name="HTML (StarWriter)",
+    filter_name="XHTML Writer File",
     extension="html",
     path=None):
-    """Convert the document in ``path`` to HTML.
+    """Convert the document in ``path`` to XHTML.
 
     Returns the HTML text. Any subobjects are placed as files in the
     document path.
