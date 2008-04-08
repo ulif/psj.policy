@@ -360,10 +360,10 @@ This stream can be read. We get the data::
 
    >>> got = res_data.getData()
    >>> print got
-   <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html ...>
-   <html xmlns="...">
+   <html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
    ...
-   ...</html>
+   </html>
 
 There should be no 'HTML encoding' of characters, because users will
 search the catalog for 'Äpfel' and not '&Auml;pfel'::

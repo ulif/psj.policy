@@ -15,6 +15,8 @@ Bug fixes
 Feature changes
 ---------------
 
+* Added tidy call for generating XHTML from HTML
+
 * Added script for preparing/restoring libs (UN*X only).
 
 
