@@ -113,13 +113,15 @@ this.
                        libxslt1.1 libxslt1-dev xsltproc \
                        libsm6 sun-java5-bin \
                        libjpeg62 libjpeg62-dev libfreetype6 \
-                       libfreetype6-dev \
+                       libfreetype6-dev tidy \
                        xvfb python2.4-profiler
 
   These are the generally needed packages for building and running
   ``psj.policy``. Some may be already installed on your
   system. Concerning the Java package (above Sun Java 1.5 is
   installed) you might get along with a different one.
+
+  The tidy package is needed for postprocessing of HTML docs.
 
   The libsm6 and xvfb packages are needed for the X-server
   requirements of OOo. You don't have to run a X-server with this
