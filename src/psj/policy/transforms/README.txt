@@ -410,3 +410,51 @@ that strip content, which might validly differ from the local test files::
    ...                             got.split('\n'))
    >>> list(diff)
    []
+
+
+Handle foreign character sets correctly
+---------------------------------------
+
+The transformation should also cope with non-standard western
+documents. We upload an example with japanese chars.
+
+For this, we again get the raw data from the document::
+
+   >>> input_file_path = join(input_path, 'testdoc2.odt')
+   >>> raw_odt = open(input_file_path).read()
+
+Then, we need a new 'datastream', in wich the results will be
+stored::
+
+   >>> from Products.PortalTransforms.data import datastream
+   >>> data = datastream('odt_to_html')
+
+Now we can perform the real conversion in a transformation context::
+
+   >>> res_data = transform.convert(raw_odt, data, 
+   ...                              filename='testdoc2.odt')
+   >>> got = res_data.getData()
+   >>> print got
+   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   ...
+   <html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+   ...
+   </html>
+
+There are real japanese Characters in the document::
+
+   >>> got_u = got.decode('utf-8')
+   >>> u'\u304a\u732b\u3055\u307e' in got_u
+   True
+
+There are real arabic Characters in the document::
+
+   >>> 'xml:lang="ar-SA">\xd8\xa7\xd9\x84\xd8\xa7\xd8' in got
+   True
+
+There are real cyrillic characters in the document::
+
+   >>> '\xd1\x81\xd0\xbc\xd0\xb5\xd1\x8f' in got
+   True
+
