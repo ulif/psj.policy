@@ -36,6 +36,10 @@ from Products.PortalTransforms.libtransforms.commandtransform import (
 from Products.PortalTransforms.libtransforms.utils import sansext
 from psj.policy.bin import ooo_convert
 
+# This RE finds all text in between SDFIELD tags, even if more than
+# one appears in one line...
+SDFIELD_RE = re.compile(r'<SDFIELD[^>]*>((.(?!<SDFIELD))*)</SDFIELD>')
+
 class Document(commandtransform):
     """A document that can be unzipped and processed with lxml.
     """
@@ -103,8 +107,7 @@ class Document(commandtransform):
         tmp_fd, outfilepath = tempfile.mkstemp()
         outfile = os.fdopen(tmp_fd, 'w+b')
         for line in open(filepath, 'rb'):
-            outfile.write(re.sub(
-                r'<SDFIELD[^>]+>([^<]*)</SDFIELD>', r'\1', line))
+            outfile.write(SDFIELD_RE.sub(r'\1', line))
             
         # Copy file back to origin...
         outfile.seek(0)
