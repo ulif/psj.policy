@@ -67,11 +67,16 @@ def install(site):
     out = StringIO()
 
     # Register transforms
-    print >> out, "Installing odt_to_html transform"
     for name, module in [
-        ('odt_to_html', 'psj.policy.transforms.odt_to_html'),]:
-
+        ('odt_to_html', 'psj.policy.transforms.odt_to_html'),
+        ('doc_to_html', 'psj.policy.transforms.doc_to_html'),]:
+        print >> out, "Installing %s transform" % name
         registerTransform(site, out, name, module)
+    # Reregister standard transformations, so that they appear in the
+    # list of transforms _after_ ours.
+    unregisterTransform(site, out, 'word_to_html')
+    registerTransform(site, out, 'word_to_html',
+                      'Products.PortalTransforms.transforms.word_to_html')
 
     # Register additional products
     register_products(site, out)
@@ -84,6 +89,7 @@ def uninstall(site):
 
     # Remove transforms
     unregisterTransform(site, out, 'odt_to_html')
+    unregisterTransform(site, out, 'doc_to_html')
     return out.getvalue()
 
 def setupPSJTransforms(context):
