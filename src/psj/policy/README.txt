@@ -55,3 +55,58 @@ It delivers text/html::
    >>> odt_transform.output
    'text/html'
 
+The .doc to .html transform
+---------------------------
+
+We pick the .odt to HTML transformation, which
+should be registered during startup::
+
+   >>> doc_trans_name, doc_transform =  [x for x in transforms.items() 
+   ...                                   if x[0] == 'doc_to_html'][0]
+   >>> doc_transform
+   <Transform at /plone/portal_transforms/doc_to_html>
+
+This transform supports one input MIME type::
+
+   >>> doc_transform.inputs
+   ('application/msword',)
+
+It delivers text/html::
+
+   >>> doc_transform.output
+   'text/html'
+
+The local doc transform should picked by default, if something has to
+be converted from application/msword to text/html::
+
+   >>> t = transforms._findPath('application/msword', 'text/html')[0]
+   >>> t
+   <Transform at doc_to_html>
+
+But 'word_to_html' should be still available, in case our extension is
+unregistered::
+
+   >>> 'word_to_html' in transforms.keys()
+   True
+
+We grab a simple
+doc file from the tests directory in `transforms`::
+
+   >>> import os
+   >>> testfilepath = os.path.dirname(os.path.abspath(__file__))
+   >>> testfilepath = os.path.join(testfilepath, 'transforms', 'tests',
+   ...                             'input')
+   >>> docfilepath = os.path.join(testfilepath, 'simpledoc1.doc')
+   >>> doc = open(docfilepath, 'rb').read()
+
+Now we let the portal transforms transform this document::
+
+   >>> data = transforms.convertTo('text/html', doc,
+   ...                             mimetype='application/msword')
+   >>> html = data.getData()
+   >>> print html
+   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   ...A simple document...
+   </html>
+
+
