@@ -458,3 +458,70 @@ There are real cyrillic characters in the document::
    >>> '\xd1\x81\xd0\xbc\xd0\xb5\xd1\x8f' in got
    True
 
+
+Convert .doc to HTML
+====================
+
+All this was about odt docs. We now care for another transformation
+available with PSJ: the doc conversion. This also uses OOo as
+converting engine in background.
+
+
+Create a transformation
+-----------------------
+
+Furthermore, we pick up our transformation. It is defined in the
+``doc_to_html`` module, but we get an instance of the real
+transformation class by calling ``register()``
+
+   >>> from psj.policy.transforms import doc_to_html
+   >>> transform = doc_to_html.register()
+   >>> transform
+   <psj.policy.transforms.doc_to_html.Doc2Html object at 0x...>
+
+   >>> transform.inputs
+   ('application/msword',)
+
+   >>> transform.output
+   'text/html'
+
+   >>> transform.output_encoding
+   'utf-8'
+
+Perform a transformation
+------------------------
+
+For this, we again get the raw data from the document::
+
+   >>> input_file_path = join(input_path, 'testdoc1.doc')
+   >>> raw_doc = open(input_file_path).read()
+
+Then, we need a new 'datastream', in wich the results will be
+stored::
+
+   >>> from Products.PortalTransforms.data import datastream
+   >>> data = datastream('doc_to_html')
+
+Now we can perform the real conversion in a transformation context::
+
+   >>> res_data = transform.convert(raw_doc, data, 
+   ...                              filename='testdoc1.doc')
+
+This stream can be read. We get the data::
+
+   >>> got = res_data.getData()
+   >>> print got
+   <html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+   ...
+   </html>
+
+There should be no 'HTML encoding' of characters, because users will
+search the catalog for 'Äpfel' and not '&Auml;pfel'::
+
+   >>> 'w&uuml;nscht' in got
+   False
+
+   >>> 'wünscht' in got
+   True
+
