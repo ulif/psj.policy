@@ -145,6 +145,7 @@ def convert(
     ret_val = 0
     doc = None
     stdout = False
+    filter_props = None
 
     try:
         ctxLocal = uno.getComponentContext()
@@ -159,12 +160,25 @@ def convert(
             "com.sun.star.frame.Desktop", ctx)
 
         cwd = systemPathToFileUrl(getcwd())
-        outProps = (
+
+
+        out_props = [
             PropertyValue("FilterName" , 0, filter_name , 0),
 	    PropertyValue("Overwrite" , 0, True , 0),
-            PropertyValue("OutputStream", 0, OutputStream(), 0)
-	)
-	    
+            PropertyValue("OutputStream", 0, OutputStream(), 0),
+	]
+
+        if filter_name == "writer_pdf_Export":
+            # We have to pass the `FilterData` property very
+            # carefully. It must be an `uno.Any` value.
+            filter_props = PropertyValue(
+                "FilterData", 0, uno.Any(
+                    "[]com.sun.star.beans.PropertyValue", (
+                        PropertyValue("SelectPdfVersion", 0, 1L, 0),
+                        PropertyValue("UseTaggedPDF", 0, False, 0),
+                )), 0)
+            out_props.append(filter_props)
+
         inProps = PropertyValue("Hidden" , 0 , True, 0),
         for path in paths:
             try:
@@ -180,9 +194,9 @@ def convert(
                     (dest, ext) = splitext(path)
                     dest = dest + "." + extension
                     destUrl = absolutize(cwd, systemPathToFileUrl(dest))
-                    doc.storeToURL(destUrl, outProps)
+                    doc.storeToURL(destUrl, tuple(out_props))
 		else:
-		    doc.storeToURL("private:stream",outProps)
+		    doc.storeToURL("private:stream",out_props)
             except IOException, e:
                 print "Error during conversion: ", e.Message
                 ret_val = 1
