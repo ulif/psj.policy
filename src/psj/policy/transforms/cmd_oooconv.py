@@ -87,6 +87,18 @@ class Document(commandtransform):
         os.chdir(curr_path)
         return html
 
+    def convertToPDF(self):
+        name = self.name()
+        curr_path = os.getcwd()
+        os.chdir(self.tmpdir)
+        ooo_convert.convert_to_pdf(path=name)
+        pdffilepath = os.path.join(
+            self.tmpdir, "%s.pdf" % sansext(name))
+        pdf = open(pdffilepath, 'r').read()
+        os.chdir(curr_path)
+        return pdf
+        
+
     def tidy(self, filepath):
         """Run tidy over HTML output can produce clean XHTML.
 

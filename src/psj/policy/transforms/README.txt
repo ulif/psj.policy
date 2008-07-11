@@ -19,6 +19,8 @@ The current transformations provided are:
 
 - odt to HTML via OpenOffice.org (OOo)
 
+- odt to PDF/A via OpenOffice.org (OOo)
+
 - docx to HTML via lxml.
 
 The ``lxml`` library is a Python library that offers direct access to
@@ -271,6 +273,44 @@ We also get a diff of both files::
    ...                             output.split('\n'))
    >>> list(diff)
    []
+
+
+Create a virtual odt document (with OpenOffice.org)
+---------------------------------------------------
+
+The most powerfull method to transforms documents of all kind might be
+to use OpenOffice.org (OOo) because here we can use a fully fledged
+office suite in the background. We provide a virtual OOo document in
+the ``cmd_oooconv`` module::
+
+   >>> from psj.policy.transforms.cmd_oooconv import Document
+   >>> document = Document('myodtdoc.odt', content_in)
+
+Convert the virtual document to HTML (using OOo)
+------------------------------------------------
+
+   >>> document = Document('myodtdoc', content_in)
+   >>> output = document.convert()
+   >>> output
+   '<html xmlns="http://www.w3.org/1999/xhtml">\n<head>\n...'
+
+Convert the virtual document to PDF/A (using OOo)
+-------------------------------------------------
+
+We cannot only convert data to HTML but also to PDF::
+
+   >>> output = document.convertToPDF()  
+
+The ``output`` variable now contains our PDF document::
+
+   >>> output
+   '%PDF-1.4\n%...'
+
+   >>> len(output)
+   1201187
+
+As you see, PDF/A documents are pretty large, because the store all
+related data of the document, especially fonts.
 
 All this is very well, but now we also want OOo documents
 automatically to be recognized and handled approprietely.
