@@ -69,6 +69,7 @@ def install(site):
     # Register transforms
     for name, module in [
         ('odt_to_html', 'psj.policy.transforms.odt_to_html'),
+        ('odt_to_pdf', 'psj.policy.transforms.odt_to_pdf'),
         ('doc_to_html', 'psj.policy.transforms.doc_to_html'),]:
         print >> out, "Installing %s transform" % name
         registerTransform(site, out, name, module)
@@ -89,6 +90,7 @@ def uninstall(site):
 
     # Remove transforms
     unregisterTransform(site, out, 'odt_to_html')
+    unregisterTransform(site, out, 'odt_to_pdf')
     unregisterTransform(site, out, 'doc_to_html')
     return out.getvalue()
 
