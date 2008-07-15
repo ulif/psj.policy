@@ -55,6 +55,57 @@ It delivers text/html::
    >>> odt_transform.output
    'text/html'
 
+
+The .odt to .pdf transform
+--------------------------
+
+The trasformation from OOo .odt files to PDF should also be available
+after startup::
+
+   >>> odt_trans_name, odt_transform =  [x for x in transforms.items() 
+   ...                                   if x[0] == 'odt_to_pdf'][0]
+   >>> odt_transform
+   <Transform at /plone/portal_transforms/odt_to_pdf>
+
+This transform supports one input MIME type::
+
+   >>> odt_transform.inputs
+   ('application/vnd.oasis.opendocument.text',)
+
+It delivers a pdf document::
+
+   >>> odt_transform.output
+   'application/pdf'
+
+This transform should be picked up by the machinery by default, when
+we want to get a PDF representation of an .odt file::
+
+   >>> t = transforms._findPath(
+   ...        'application/vnd.oasis.opendocument.text', 
+   ...        'application/pdf')[0]
+   >>> t
+   <Transform at odt_to_pdf>
+
+Now let's get a real file an let it be transformed::
+
+   >>> import os
+   >>> testfilepath = os.path.dirname(os.path.abspath(__file__))
+   >>> testfilepath = os.path.join(testfilepath, 'transforms', 'tests',
+   ...                             'input')
+   >>> odtfilepath = os.path.join(testfilepath, 'testdoc1.odt')
+   >>> doc = open(odtfilepath, 'rb').read()
+
+We run the transform by calling the portal tools::
+
+   >>> data = transforms.convertTo(
+   ...     'application/pdf', doc,
+   ...     mimetype='application/vnd.oasis.opendocument.text')
+   >>> pdf = data.getData()
+   >>> print pdf[:10]
+   %PDF-1.4...
+
+   
+
 The .doc to .html transform
 ---------------------------
 
