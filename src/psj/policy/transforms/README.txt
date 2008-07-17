@@ -318,8 +318,14 @@ All this is very well, but now we also want OOo documents
 automatically to be recognized and handled approprietely.
 
 
+Converting .doc(x) files with OOo
+=================================
+
+There are basically two $MS document types, that we support: .doc and
+the newer .docx format. We start with handling the first.
+
 Converting .doc files with OOo
-==============================
+------------------------------
 
 Our OOo helper in ``cmd_oooconv`` provides conversion of documents
 to HTML and PDF format. The conversion is done by creating a virtual
@@ -353,6 +359,29 @@ Also conversion to PDF/A is possible::
    >>> len(output) > 1200000
    True
 
+Converting .docx files with OOo
+------------------------------
+
+Now we care for the newer docx file type, load a sample document and
+convert it to HTML::
+
+   >>> input_file_path = join(input_path, 'testdoc1.docx')
+   >>> document = Document('mydoc1.docx', content_in)
+   >>> html = document.convert()
+   >>> print html
+   <html xmlns="http://www.w3.org/1999/xhtml">
+   ...
+   </body>
+   </html>
+
+Converting to PDF is easy as well::
+
+   >>> pdf = document.convertToPDF()
+   >>> pdf[:20]
+   '%PDF-1.4\n%...'
+
+   >>> len(output) > 1200000
+   True
 
 
 Transform data from .odt files
