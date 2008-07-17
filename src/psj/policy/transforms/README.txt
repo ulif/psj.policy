@@ -587,8 +587,8 @@ First we want to compare two files called ``testdoc1``::
    >>> input_file_path = join(input_path, 'testdoc1.doc')
 
 
-Create a transformation
------------------------
+Create a transformation (doc to HTML)
+-------------------------------------
 
 Furthermore, we pick up our transformation. It is defined in the
 ``doc_to_html`` module, but we get an instance of the real
@@ -645,3 +645,48 @@ search the catalog for 'Äpfel' and not '&Auml;pfel'::
    >>> 'wünscht' in got
    True
 
+Create a transformation (doc to PDF)
+-------------------------------------
+
+Another available transformation is the one from .doc files to PDF. As
+we only support PDF/A, we will get those type back.
+
+The transformation is defined in ``doc_to_pdf`` module, but we get an
+instance of the real transformation class by calling ``register()``
+
+   >>> from psj.policy.transforms import doc_to_pdf
+   >>> transform = doc_to_pdf.register()
+   >>> transform
+   <psj.policy.transforms.doc_to_pdf.Doc2Pdf object at 0x...>
+
+   >>> transform.inputs
+   ('application/msword',)
+
+   >>> transform.output
+   'application/pdf'
+
+   >>> transform.output_encoding
+   'utf-8'
+
+We grab a testdocument again to transform it::
+
+   >>> input_file_path = join(input_path, 'testdoc1.doc')
+   >>> raw_doc = open(input_file_path).read()
+
+Then, we need a new 'datastream', in wich the results will be
+stored::
+
+   >>> from Products.PortalTransforms.data import datastream
+   >>> data = datastream('doc_to_pdf')
+
+Now we can perform the real conversion in a transformation context::
+
+   >>> res_data = transform.convert(raw_doc, data, 
+   ...                              filename='testdoc1.doc')
+
+This stream can be read. We get the data::
+
+   >>> got = res_data.getData()
+   >>> print got[:10]
+   %PDF-1.4
+   ...
