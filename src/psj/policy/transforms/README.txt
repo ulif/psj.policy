@@ -23,6 +23,8 @@ The current transformations provided are:
 
 - docx to HTML via lxml.
 
+- doc to PDF/A via OpenOffice.org (OOo)
+
 The ``lxml`` library is a Python library that offers direct access to
 systems' libxml2 and libxslt. The external `xsltproc` program, often
 needed by other packages is not needed with `psj.policy` any more.
@@ -306,14 +308,51 @@ The ``output`` variable now contains our PDF document::
    >>> output
    '%PDF-1.4\n%...'
 
-   >>> len(output)
-   1201187
+   >>> len(output) > 1200000
+   True
 
-As you see, PDF/A documents are pretty large, because the store all
+As you see, PDF/A documents are pretty large, because they store all
 related data of the document, especially fonts.
 
 All this is very well, but now we also want OOo documents
 automatically to be recognized and handled approprietely.
+
+
+Converting .doc files with OOo
+==============================
+
+Our OOo helper in ``cmd_oooconv`` provides conversion of documents
+to HTML and PDF format. The conversion is done by creating a virtual
+document and then calling a specialized convert method. It accepts the
+input filetypes, that are provided by OOo. So also .doc documents can
+be converted.
+
+To perform this step, a virtual document has to be created first::
+
+   >>> from psj.policy.transforms.cmd_oooconv import Document
+   >>> input_file_path = join(input_path, 'testdoc1.doc')
+   >>> content_in = r'' + open(input_file_path, 'rb').read()
+   >>> document = Document('mydoc1.doc', content_in)
+
+As we can see, the virtual document name can be different from the
+original. Now we convert this document to HTML::
+
+   >>> html = document.convert()
+   >>> print html
+   <html xmlns="http://www.w3.org/1999/xhtml">
+   ...
+   </body>
+   </html>
+
+Also conversion to PDF/A is possible::
+
+   >>> pdf = document.convertToPDF()
+   >>> pdf[:20]
+   '%PDF-1.4\n%...'
+
+   >>> len(output) > 1200000
+   True
+
 
 
 Transform data from .odt files
@@ -376,6 +415,7 @@ Perform a transformation
 
 For this, we again get the raw data from the document::
 
+   >>> input_file_path = join(input_path, 'testdoc1.odt')
    >>> raw_odt = open(input_file_path).read()
 
 
@@ -505,6 +545,17 @@ Convert .doc to HTML
 All this was about odt docs. We now care for another transformation
 available with PSJ: the doc conversion. This also uses OOo as
 converting engine in background.
+
+All the testfiles we want to compare reside in the ``tests``
+subdirectory::
+
+   >>> from os.path import join, dirname
+   >>> input_path = join(dirname(__file__), 'tests', 'input')
+   >>> output_path = join(dirname(__file__), 'tests', 'output')
+
+First we want to compare two files called ``testdoc1``::
+
+   >>> input_file_path = join(input_path, 'testdoc1.doc')
 
 
 Create a transformation
