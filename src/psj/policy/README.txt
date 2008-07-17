@@ -161,3 +161,50 @@ Now we let the portal transforms transform this document::
    </html>
 
 
+The .doc to .pdf transform
+--------------------------
+
+The trasformation from MS .doc files to PDF should also be available
+after startup::
+
+   >>> doc_trans_name, doc_transform =  [x for x in transforms.items() 
+   ...                                   if x[0] == 'doc_to_pdf'][0]
+   >>> doc_transform
+   <Transform at /plone/portal_transforms/doc_to_pdf>
+
+This transform supports one input MIME type::
+
+   >>> doc_transform.inputs
+   ('application/msword',)
+
+It delivers a pdf document::
+
+   >>> doc_transform.output
+   'application/pdf'
+
+This transform should be picked up by the machinery by default, when
+we want to get a PDF representation of an .odt file::
+
+   >>> t = transforms._findPath(
+   ...        'application/msword', 
+   ...        'application/pdf')[0]
+   >>> t
+   <Transform at doc_to_pdf>
+
+Now let's get a real file an let it be transformed::
+
+   >>> import os
+   >>> testfilepath = os.path.dirname(os.path.abspath(__file__))
+   >>> testfilepath = os.path.join(testfilepath, 'transforms', 'tests',
+   ...                             'input')
+   >>> docfilepath = os.path.join(testfilepath, 'testdoc1.doc')
+   >>> doc = open(docfilepath, 'rb').read()
+
+We run the transform by calling the portal tools::
+
+   >>> data = transforms.convertTo(
+   ...     'application/pdf', doc,
+   ...     mimetype='application/msword')
+   >>> pdf = data.getData()
+   >>> print pdf[:10]
+   %PDF-1.4...
