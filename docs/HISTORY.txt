@@ -7,6 +7,9 @@ Changelog
 Bug fixes
 ---------
 
+* Fixed race condition or whatever, that stopped the conversion from
+  working with ``Products.LinguaPlone`` package.
+
 * Enabled XHTML-1.0 output instead of HTML.
 
 * Improved transform initialization to cope with already installed

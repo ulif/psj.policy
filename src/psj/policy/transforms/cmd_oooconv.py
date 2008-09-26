@@ -49,6 +49,7 @@ class Document(commandtransform):
 
         Create a temporary directory for conversion.
         """
+        self.orig_data = data
         commandtransform.__init__(self, name)
         name = self.name()
         self.tmpdir, self.fullname = self.initialize_tmpdir(
@@ -75,27 +76,31 @@ class Document(commandtransform):
         """Convert the document.
         """
         name = self.name()
-        curr_path = os.getcwd()
-        os.chdir(self.tmpdir)
-        ooo_convert.convert_to_html(path=name)
-
+        newdir, status = ooo_convert.convert_file_to_html(
+            filename = name, data = self.orig_data)
         htmlfilepath = os.path.join(
-            self.tmpdir, "%s.html" % sansext(name))
-        
+            newdir, "%s.html" % sansext(name))
         self.tidy(htmlfilepath)
         html = open(htmlfilepath, 'r').read()
-        os.chdir(curr_path)
+        self.cleanDir(self.tmpdir)
+        self.tmpdir = newdir
         return html
 
     def convertToPDF(self):
         name = self.name()
-        curr_path = os.getcwd()
+        curr_path = None
+        try:
+            curr_path = os.getcwd()
+        except OSError:
+            # With LinguaPlone we sometimes have no CWD?!
+            pass
         os.chdir(self.tmpdir)
         ooo_convert.convert_to_pdf(path=name)
         pdffilepath = os.path.join(
             self.tmpdir, "%s.pdf" % sansext(name))
         pdf = open(pdffilepath, 'r').read()
-        os.chdir(curr_path)
+        if curr_path is not None:
+            os.chdir(curr_path)
         return pdf
         
 

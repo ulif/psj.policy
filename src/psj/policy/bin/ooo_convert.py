@@ -49,6 +49,38 @@ def unregister_uno_import():
 
 unregister_uno_import()
 
+def convert_file_to_html(
+    url="uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext",
+    # A list of internal filter names can be obtained at:
+    # http://wiki.services.openoffice.org/wiki/Framework/Article/Filter/FilterList_SO_8
+    filter_name="HTML (StarWriter)",
+    extension="html",
+    filename=None,
+    data=None):
+    """Convert a file to HTML.
+
+    The function calls an OOo.org server in background to complete the task.
+
+    The `filename` and `data` arguments represent the name of the file
+    to be converted and the contents of the file.
+
+    Returned is th path to a temporary directory, where the modified
+    file and any subobjects (images, etc.) might reside.
+
+    It is in the resposibility of the calling code to remove the directory!
+    
+    """
+    if data is None or filename is None:
+        return ''
+
+    import tempfile
+    import os
+    absdir = tempfile.mkdtemp()
+    absdocpath = os.path.join(absdir, filename)
+    open(absdocpath, 'wb').write(data)
+    status = convert_to_html(url, filter_name, extension, path=absdocpath)
+    return (absdir, status)
+
 
 def convert_to_html(
     url="uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext",
@@ -62,8 +94,13 @@ def convert_to_html(
 
     Returns the HTML text. Any subobjects are placed as files in the
     document path.
+
+    This function is not used in the ``psj`` packages, because it
+    seems to suffer from race conditions when certain packages (namely
+    `Products.LinguaPlone`) are used.
     """
-    return convert(url, filter_name, extension, paths=[path])
+    result = convert(url, filter_name, extension, paths=[path])
+    return result
 
 def convert_to_pdf(
     url="uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext",
@@ -210,7 +247,7 @@ def convert(
         sys.stderr.write(
             "Error ("+repr(e.__class__)+") :" + e.Message + "\n")
         ret_val = 1
-        
+
     return ret_val
 
 def usage():
