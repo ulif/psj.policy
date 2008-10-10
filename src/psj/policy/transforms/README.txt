@@ -308,7 +308,7 @@ The ``output`` variable now contains our PDF document::
    >>> output
    '%PDF-1.4\n%...'
 
-   >>> len(output) > 1200000
+   >>> len(output) > 1100000
    True
 
 As you see, PDF/A documents are pretty large, because they store all
@@ -356,7 +356,7 @@ Also conversion to PDF/A is possible::
    >>> pdf[:20]
    '%PDF-1.4\n%...'
 
-   >>> len(output) > 1200000
+   >>> len(output) > 1100000
    True
 
 Converting .docx files with OOo
@@ -380,7 +380,7 @@ Converting to PDF is easy as well::
    >>> pdf[:20]
    '%PDF-1.4\n%...'
 
-   >>> len(output) > 1200000
+   >>> len(output) > 1100000
    True
 
 
@@ -511,6 +511,8 @@ that strip content, which might validly differ from the local test files::
 
    >>> expected_data = rip_out_num_vals(expected_data)
    >>> expected_data = rip_out_regexp(regexp_list, expected_data)
+
+   >>> open('mydoc.html', 'wb').write(got)
 
    >>> got = rip_out_num_vals(got)
    >>> got = rip_out_regexp(regexp_list, got)
