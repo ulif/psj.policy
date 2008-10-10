@@ -115,6 +115,26 @@ class Document(commandtransform):
         os.system(cmd)
         return
 
+    def getMarker(self, tag):
+        """Create a marker out of attributes of a string.
+
+        This is a helper for `stripSdfieldTags`, where we replace
+        SDFIELD tags by appropriate divs. The divs need a class
+        attribute to differentiate between them, for example to differ
+        a title tag from an author tag. The name of this class
+        attribute is constructed here, be concatenating the values of
+        all SDFIELD attributes.
+
+        Example: '<SDFIELD foo=name bar=baz>Value</SDFIELD>'
+                 becomes
+                 'namebaz'
+                 which in the calling function will lead to
+                 '<div class='namebaz'>Value</div>'
+        """ 
+        attrs = re.findall('[\w]+=[\w]+', tag)
+        marker = ''.join([x.lower().split('=')[1] for x in attrs])
+        return marker
+
     def stripSdfieldTags(self, filepath):
         """Strip 'sdfield' tags from file in filepath.
 
@@ -124,7 +144,18 @@ class Document(commandtransform):
         tmp_fd, outfilepath = tempfile.mkstemp()
         outfile = os.fdopen(tmp_fd, 'w+b')
         for line in open(filepath, 'rb'):
-            outfile.write(SDFIELD_RE.sub(r'\1', line))
+            tags =  re.findall('((<SDFIELD[^>]+>)([^<]+)</SDFIELD>)', line)
+            if not tags:
+                outfile.write(line)
+                continue
+            for tag in tags:
+                marker = self.getMarker(tag[1])
+                replacement =  '<div class="%s">%s</div>' % (marker, tag[2])
+                line = line.replace(tag[0], replacement)
+                # Remove embracing <P> tags...
+                line = re.sub('<P[^>]+>(<div .*>.*</div>)</P>', r'\1', line)
+            outfile.write(line)
+
             
         # Copy file back to origin...
         outfile.seek(0)
