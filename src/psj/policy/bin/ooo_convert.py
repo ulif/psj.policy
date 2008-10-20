@@ -244,8 +244,15 @@ def convert(
                 doc.dispose()
 
     except UnoException, e:
-        sys.stderr.write(
-            "Error ("+repr(e.__class__)+") :" + e.Message + "\n")
+        sys.stderr.write("ERROR: %s\n" % e.__class__)
+        if str(e.__class__).endswith('NoConnectException'):
+            sys.stderr.write("Please make sure, the OpenOffice.org server\n"
+                             "is running in background.\n")
+        try:
+            # Many messages are in a strange encoding...
+            sys.stderr.write("ERROR-MESSAGE: %s" % e.Message)
+        except UnicodeEncodeError:
+            pass
         ret_val = 1
 
     return ret_val
