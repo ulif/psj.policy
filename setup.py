@@ -7,6 +7,8 @@ def read(*rnames):
 long_description = (
     read('README.txt')
     + '\n\n'
+    + read('docs', 'SPONSORS.txt')
+    + '\n\n'
     + read('docs', 'HISTORY.txt')
     + '\n\n'
     + 'Download\n'
@@ -15,14 +17,14 @@ long_description = (
 
 setup(
     name='psj.policy',
-    version='0.1.1dev',
+    version='0.1dev',
     author='Uli Fouquet',
     author_email='uli@gnufix.de',
-    url = 'https://svn.gnufix.de/repos/psj.policy',
-    description='Plone Scientific Jounal - the site policy',
+    url = 'http://pypi.python.org/pypi/psj.policy',
+    description='Plone Scholarly Journal - the site policy',
     long_description=long_description,
     license='GPL',
-    keywords="zope policy journal plone plone3",
+    keywords="zope policy scholarly scholar journal plone plone3",
     classifiers=['Development Status :: 3 - Alpha',
                  'Environment :: Web Environment',
                  'Intended Audience :: Developers',
