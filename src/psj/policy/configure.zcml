@@ -8,7 +8,7 @@
 
     <genericsetup:registerProfile
 	name="default"
-	title="Plone Scientific Journal Site Policy"
+	title="Plone Scholarly Journal Site Policy"
 	directory="profiles/default"
 	description="Turn a Plone site into a PSJ site."
 	provides="Products.GenericSetup.interfaces.EXTENSION"

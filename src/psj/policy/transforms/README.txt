@@ -4,7 +4,7 @@ psj.policy.transforms
 :Author: Uli Fouquet
 :Test-Layer: unit
 
-One of the major aims of Plone Scientific Journal sites is, to process
+One of the major aims of Plone Scholarly Journal sites is, to process
 content, that was delivered in .odt or .docx formats. Transforms are
 the Plone way to handle such 'external' document formats.
 
