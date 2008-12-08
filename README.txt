@@ -1,14 +1,36 @@
 psj.policy
 **********
 
-A package that defines the site policy of a PloneScientificJournal
+A package that defines the site policy of a PloneScholarlyJournal
 site.
 
-Use the psj.site package to see some actions.
+The ``Plone Scholarly Journal`` (PSJ) is a collection of packages to
+create and maintain scholarly journals using Plone.
+
+The special abilities of PSJ are:
+
+ * High quality on-the-fly transformations of office documents using
+   OpenOffice.org.
+
+ * Flexible metadata handling
+
+This package contains the content types and metadata handling.
+
+Currently, the whole thing consists of three packages:
+
+ * ``psj.content`` (provides specialized content types with extended
+   metadata handling)
+
+ * ``psj.policy`` (this package)
+
+ * ``psj.site`` (kind of umbrella package for the other packages).
+
+
+Use the ``psj.site`` package to see some actions.
 
 The only thing that is built when installing the source version of
 this package is a testrunner. This is good for development, but
-endusers might get the psj.site package.
+endusers might prefer to get the psj.site package.
 
 Prerequisites
 =============
