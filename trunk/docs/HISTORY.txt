@@ -1,0 +1,53 @@
+Changelog
+*********
+
+0.1.2 (unreleased)
+==================
+
+Bug fixes
+---------
+
+* Fixed race condition or whatever, that stopped the conversion from
+  working with ``Products.LinguaPlone`` package.
+
+* Enabled XHTML-1.0 output instead of HTML.
+
+* Improved transform initialization to cope with already installed
+  transforms of same names. Those are now unregistered first.
+
+Feature changes
+---------------
+
+* Added support for MS word documents.
+
+* Added tidy call for generating XHTML from HTML
+
+* Added script for preparing/restoring libs (UN*X only).
+
+
+0.1.1 (2008-03-22)
+==================
+
+Bug fixes
+---------
+
+* Pinned down plone version: > 3.0 < 3.1dev.
+
+Feature changes
+---------------
+
+* Added start/stop scripts for OOo server (UN*X only).
+
+* Added standalone converter that uses OOo in background.
+
+* Added openoffice buildout recipe.
+
+* Added PILwoTK in buildout. This is a PIL package that really works
+  with buildout.
+
+
+0.1 (2008-03-06)
+================
+
+* Initial release
+
