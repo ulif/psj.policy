@@ -1,6 +1,17 @@
 Changelog
 *********
 
+0.2.1 (2008-12-09)
+==================
+
+Bug fixes
+---------
+
+* Fix broken download URL for OpenOffice.org in buildout.
+
+* Add version information for ``GenericSetup``.
+
+
 0.2 (2008-12-09)
 ================
 
