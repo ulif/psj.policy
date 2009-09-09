@@ -4,6 +4,20 @@ Changelog
 0.3 (unreleased)
 ================
 
+Feature changes
+---------------
+
+* Removed ``oooctl``, ``convert`` scripts. They are now maintained in
+  a separate package `ulif.openoffice` (which needs to be
+  installed). This is more reliable in that a locally installed
+  OpenOffice.org suite (as provided by dists like Ubuntu) can be used.
+
+  We now also have a distinct interface to communicate with an
+  OpenOffice.org server.
+
+* Changed OpenOffice.org transforms to use new ulif.openoffice
+  package for document conversion.
+
 
 0.2.1 (2008-12-09)
 ==================
