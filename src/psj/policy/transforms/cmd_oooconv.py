@@ -34,7 +34,10 @@ from StringIO import StringIO
 from Products.PortalTransforms.libtransforms.commandtransform import (
     commandtransform,)
 from Products.PortalTransforms.libtransforms.utils import sansext
-from psj.policy.bin import ooo_convert
+from ulif.openoffice.client import PyUNOServerClient
+
+client = PyUNOServerClient()
+ooo_convert = client
 
 # This RE finds all text in between SDFIELD tags, even if more than
 # one appears in one line...
@@ -76,12 +79,28 @@ class Document(commandtransform):
         """Convert the document.
         """
         name = self.name()
-        newdir, status = ooo_convert.convert_file_to_html(
+        
+        response = ooo_convert.convertToHTML(
             filename = name, data = self.orig_data)
-        htmlfilepath = os.path.join(
-            newdir, "%s.html" % sansext(name))
+        newdir = os.path.dirname(response.message)
+        status = response.status
+        htmlfilepath = response.message
+        if response.status != 200:
+            raise IOError('Could not convert: %s' % name )
+
+        # Copy the source file to new location...
+        try:
+            shutil.copy2(os.path.join(self.tmpdir, name),
+                         os.path.join(newdir, name))
+        except:
+            # No source?
+            pass
+
+        # Clean up the HTML code...
         self.tidy(htmlfilepath)
         html = open(htmlfilepath, 'r').read()
+
+        # Remove old tempdir...
         self.cleanDir(self.tmpdir)
         self.tmpdir = newdir
         return html
@@ -89,21 +108,17 @@ class Document(commandtransform):
     def convertToPDF(self):
         name = self.name()
         curr_path = None
-        try:
-            curr_path = os.getcwd()
-        except OSError:
-            # With LinguaPlone we sometimes have no CWD?!
-            pass
-        os.chdir(self.tmpdir)
-        ooo_convert.convert_to_pdf(path=name)
-        pdffilepath = os.path.join(
-            self.tmpdir, "%s.pdf" % sansext(name))
+        fullpath = os.path.join(self.tmpdir, name)
+        result = ooo_convert.convertFileToPDF(path=fullpath)
+        if result.status != 200:
+            raise IOError('Could not convert: %s' % name)
+        pdffilepath = result.message
         pdf = open(pdffilepath, 'r').read()
-        if curr_path is not None:
-            os.chdir(curr_path)
+        
+        # Remove temporary dir...
+        shutil.rmtree(os.path.dirname(pdffilepath))
         return pdf
         
-
     def tidy(self, filepath):
         """Run tidy over HTML output can produce clean XHTML.
 
