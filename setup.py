@@ -45,10 +45,9 @@ setup(
         'ulif.plone.testsetup',
         # -*- Extra requirements: -*-
         'lxml',
+        'ulif.openoffice',
         ],
     entry_points="""
       # -*- Entry points: -*-
-      [console_scripts]
-      ooo_convert = psj.policy.bin.ooo_convert:main
       """,
 )
