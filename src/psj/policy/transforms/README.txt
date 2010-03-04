@@ -25,6 +25,12 @@ The current transformations provided are:
 
 - doc to PDF/A via OpenOffice.org (OOo)
 
+- doc to HTML via OpenOffice.org (OOo)
+
+- docx to HTML via OpenOffice.org (OOo)
+
+- docx to PDF/A via OpenOffice.org (OOo)
+
 The ``lxml`` library is a Python library that offers direct access to
 systems' libxml2 and libxslt. The external `xsltproc` program, often
 needed by other packages is not needed with `psj.policy` any more.
@@ -602,7 +608,7 @@ transformation class by calling ``register()``
    <psj.policy.transforms.doc_to_html.Doc2Html object at 0x...>
 
    >>> transform.inputs
-   ('application/msword',)
+   ('application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
 
    >>> transform.output
    'text/html'
@@ -662,7 +668,7 @@ instance of the real transformation class by calling ``register()``
    <psj.policy.transforms.doc_to_pdf.Doc2Pdf object at 0x...>
 
    >>> transform.inputs
-   ('application/msword',)
+   ('application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
 
    >>> transform.output
    'application/pdf'
