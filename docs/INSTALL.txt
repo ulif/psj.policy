@@ -76,7 +76,7 @@ this.
   will have to tweak the tests lateron. This is caused by OOos
   'intelligent' locale detection, which produces different documents
   depending on your system locale. The tests here rely on the US
-  locale.
+  locale. (XXX: this might be a lie meanwhile).
 
   Afterwards setup ``/etc/apt/sources.list`` so, that universe and
   multiverse repositories are included.
