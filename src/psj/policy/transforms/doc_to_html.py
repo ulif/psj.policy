@@ -31,7 +31,11 @@ class Doc2Html(object):
     """
     __implements__ = itransform   # XXX this is Zope2 like ``itransform``
 
-    inputs = ('application/msword',)
+    inputs = (
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument' +
+        '.wordprocessingml.document',
+        )
     output = 'text/html'
     output_encoding = 'utf-8'
 
@@ -43,12 +47,16 @@ class Doc2Html(object):
         """
         return 'doc_to_html'
 
-    def convert(self, data, cache, filename=None, **kwargs):
+    def convert(self, data, cache, filename=None, mimetype=None, **kwargs):
         """Convert the data, store the result in idata and return that.
         """
-        filename = filename or 'unknown.doc'
-        if not filename.lower().endswith('.doc'):
-            filename += '.doc'
+        extension = '.doc'
+        if mimetype is not None:
+            if mimetype == self.inputs[1]:
+                extension = '.docx'
+        filename = filename or 'unknown' + extension
+        if not os.path.splitext(filename.lower())[1] in ['.doc', '.docx']:
+            filename += extension
         document = Document(filename, data)
         html = document.convert()
         sub_objects_paths = [document.tmpdir,
