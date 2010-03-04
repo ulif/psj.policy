@@ -28,10 +28,15 @@ from psj.policy.transforms.cmd_oooconv import Document
 
 class Doc2Pdf(object):
     """A transformation from MS word docs to PDF.
+
+    Supports .doc and .docx.
     """
     __implements__ = itransform   # XXX this is Zope2 like ``itransform``
 
-    inputs = ('application/msword',)
+    inputs = (
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument' +
+        '.wordprocessingml.document',)
     output = 'application/pdf'
     output_encoding = 'utf-8'
 
@@ -43,13 +48,17 @@ class Doc2Pdf(object):
         """
         return 'doc_to_pdf'
 
-    def convert(self, data, cache, filename=None, **kwargs):
+    def convert(self, data, cache, filename=None, mimetype=None, **kwargs):
         """Convert the data, store the result in idata and return that.
         """
-        filename = filename or 'unknown.doc'
+        extension = '.doc'
+        if mimetype is not None:
+            if mimetype == self.inputs[1]:
+                extension = '.docx'
+        filename = filename or 'unknown' + extension
         if not (filename.lower().endswith('.doc') or
                 filename.lower().endswith('.docx')):
-            filename += '.doc'
+            filename += extension
         document = Document(filename, data)
         pdf = document.convertToPDF()
         cache.setData(pdf)
