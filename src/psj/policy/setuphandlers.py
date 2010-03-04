@@ -22,14 +22,35 @@
 """Setup psj extensions.
 """
 
+import mimetypes
 from Products.CMFCore.utils import getToolByName
 import transaction
 
 from StringIO import StringIO
 from types import InstanceType
+from psj.policy import logger
 
 PRODUCT_DEPENDENCIES = ()
 
+new_mimetypes = (
+    {
+        'name': 'Office Word 2007 XML document',
+        'mimetypes': (
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',),
+        'extensions': ('docx',)
+        },
+    )
+
+for mt in new_mimetypes:
+    mt['globs'] = tuple(['*.' + ext for ext in mt['extensions']])
+    mt['icon_path'] = '++resource++psjpolicy-icons/%s.png' % mt['extensions'][0]
+    # Adding to standard mimetypes
+    mimetypes.add_type(mt['mimetypes'][0], '.' + mt['extensions'][0])
+
+del mimetypes
+
+
+    
 def registerTransform(site, out, name, module):
     transforms = getToolByName(site, 'portal_transforms')
     try:
@@ -61,11 +82,36 @@ def register_products(site, out, reinstall=False):
             transaction.savepoint()
     return
 
+def register_mime_type(site, mime_type_reg, out, mt_dict):
+    main_mt = mt_dict['mimetypes'][0]
+    mt_name = mt_dict['name']
+    if bool(mime_type_reg.lookup(main_mt)):
+        # Already installed
+        logger.info(
+            "%s (%s) Mime type already installed, skipped",
+            main_mt, mt_name)
+        return 
+    mime_type_reg.manage_addMimeType(
+        mt_name,
+        mt_dict['mimetypes'],
+        mt_dict['extensions'],
+        mt_dict['icon_path'],
+        binary=True,
+        globs=mt_dict['globs'])
+    logger.info("%s (%s) Mime type installed", main_mt, mt_name)
+
+    
 def install(site):
     """Install psj stuff.
     """
     out = StringIO()
 
+    # Register mime-types
+    mime_type_reg = getToolByName(site, 'mimetypes_registry')
+    for mt_dict in new_mimetypes:
+        register_mime_type(site, mime_type_reg, out, mt_dict)
+        pass
+    
     # Register transforms
     for name, module in [
         ('odt_to_html', 'psj.policy.transforms.odt_to_html'),
@@ -94,6 +140,12 @@ def uninstall(site):
     unregisterTransform(site, out, 'odt_to_pdf')
     unregisterTransform(site, out, 'doc_to_html')
     unregisterTransform(site, out, 'doc_to_pdf')
+
+    # Remove mimetypes
+    mime_type_reg = getToolByName(site, 'mimetypes_registry')
+    mt_ids = [mt_dict['mimetypes'][0] for mt_dict in new_mimetypes]
+    mime_type_reg.manage_delObjects(mt_ids)
+   
     return out.getvalue()
 
 def setupPSJTransforms(context):
