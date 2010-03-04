@@ -18,6 +18,11 @@ Feature changes
 * Changed OpenOffice.org transforms to use new ulif.openoffice
   package for document conversion.
 
+* Added .docx transformations. We can now also convert .docx files to
+  .pdf and HTML.
+
+* Added conditional registering of mime-type for .docx files and icon.
+
 
 0.2.1 (2008-12-09)
 ==================
