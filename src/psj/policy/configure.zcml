@@ -1,5 +1,6 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="psj.policy">
@@ -12,6 +13,11 @@
 	directory="profiles/default"
 	description="Turn a Plone site into a PSJ site."
 	provides="Products.GenericSetup.interfaces.EXTENSION"
+	/>
+
+    <browser:resourceDirectory
+	name="psjpolicy-icons"
+	directory="icons"
 	/>
 
 </configure>
