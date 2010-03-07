@@ -58,8 +58,15 @@ def registerTransform(site, out, name, module):
         print >> out, "Registered transform", name
     except:
         print >> out, "Transform %s already registered. Try reregister." % name
-        transforms.unregisterTransform(name)
-        transforms.manage_addTransform(name, module)
+        try:
+            transforms.unregisterTransform(name)
+            transforms.manage_addTransform(name, module)
+        except KeyError:
+            print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+            print "WARNING!"
+            print "The %s transform could not be installed!" % name
+            print "Try registering it manually!"
+            print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         pass
 
 
