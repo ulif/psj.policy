@@ -121,6 +121,7 @@ def install(site):
     
     # Register transforms
     for name, module in [
+        ('ooo_html_body', 'psj.policy.transforms.ooo_html_body'),
         ('odt_to_html', 'psj.policy.transforms.odt_to_html'),
         ('odt_to_pdf', 'psj.policy.transforms.odt_to_pdf'),
         ('doc_to_html', 'psj.policy.transforms.doc_to_html'),
@@ -143,6 +144,7 @@ def uninstall(site):
     out = StringIO()
 
     # Remove transforms
+    unregisterTransform(site, out, 'ooo_html_body')
     unregisterTransform(site, out, 'odt_to_html')
     unregisterTransform(site, out, 'odt_to_pdf')
     unregisterTransform(site, out, 'doc_to_html')

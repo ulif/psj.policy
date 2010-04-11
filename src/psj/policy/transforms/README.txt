@@ -653,8 +653,50 @@ search the catalog for 'Äpfel' and not '&Auml;pfel'::
    >>> 'wünscht' in got
    True
 
+Scrub generated HTML
+====================
+
+We also have a helper transform to scrub the generated HTML code. As
+we don't want HTML headers and own body-tags inside our HTML we have
+to clean it up.
+
+To demonstrate this we use the document generated above, which now
+contains some HTML code:
+
+
+   >>> from psj.policy.transforms import ooo_html_body
+   >>> transform = ooo_html_body.register()
+   >>> transform
+   <psj.policy.transforms.ooo_html_body.OOoHTMLBody object at 0x...>
+
+   >>> from Products.PortalTransforms.data import datastream
+   >>> data = datastream('ooo_html_body')
+
+   >>> html_orig = got
+   >>> res_data = transform.convert(html_orig, data)
+   >>> result = data.getData()
+   >>> print result
+   <div class="ooodocument" style="
+                   @page { size: ...
+     <div class="docinfocomment">
+       Journal für angewandte Kunstgeschichte Nr.1 2007
+     </div>
+   ...
+     </div>
+   </div>
+
+As we can see, the topmost ``<div>`` tag contains style
+information. These were inserted from the former header of the HTML
+document where these styles are set in a ``CDATA`` section for the
+whole document. We want, however, to make the styles only valid for
+the local doc (and overridable by Plone stylesheets).
+
+
+Convert .doc to PDF
+===================
+
 Create a transformation (doc to PDF)
--------------------------------------
+------------------------------------
 
 Another available transformation is the one from .doc files to PDF. As
 we only support PDF/A, we will get those type back.

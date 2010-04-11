@@ -7,6 +7,10 @@ Changelog
 Feature changes
 ---------------
 
+* Added transform to scrub OO.org generated HTML. ``ooo_html_body``
+  transform delivers the body of an OO.org generated HTML document
+  including also style settings set in header.
+
 * Removed ``oooctl``, ``convert`` scripts. They are now maintained in
   a separate package `ulif.openoffice` (which needs to be
   installed). This is more reliable in that a locally installed
