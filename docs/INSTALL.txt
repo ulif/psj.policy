@@ -68,9 +68,9 @@ this.
 
 1) Install the base system.
 
-  We are using Ubuntu 6.06 server with LTS (Long time support)
-  here. This means less stuff on your machine. The whole system
-  described below will need less than 2.5 GB disk space.
+  We are using Ubuntu 10.04 server LTS here. This means less stuff on
+  your machine. The whole system described below will need less than
+  2.5 GB disk space.
 
   Make sure you choose `English (US)` as base system. Otherwise you
   will have to tweak the tests lateron. This is caused by OOos
@@ -92,16 +92,16 @@ this.
 2) Install additional packages:
 
   We need Python2.4. On our system this is the default version.  So we
-  only have to do::
+  can try to do::
 
      # apt-get install python2.4-dev
 
   to get the headers for building Zope. More current distributions
   often come with Python2.5 as default and do not offer any Python2.4
   packages any more. In this case you have to grab the sources from
-  the net and install Python2.4 by yourself.
+  http://www.python.org/ and install Python2.4 by yourself.
 
-  After Python is installed, you should be able to type::
+  After Python 2.4 is installed, you should be able to type::
 
      $ python2.4
 
@@ -117,9 +117,10 @@ this.
                        xvfb python2.4-profiler
 
   These are the generally needed packages for building and running
-  ``psj.policy``. Some may be already installed on your
-  system. Concerning the Java package (above Sun Java 1.5 is
-  installed) you might get along with a different one.
+  ``psj.policy``. The latter package (``python2.4-profiler``) is not
+  needed, if you installed from sources. Some of the packages may be
+  already installed on your system. Concerning the Java package (above
+  Sun Java 1.5 is installed) you might get along with a different one.
 
   The tidy package is needed for postprocessing of HTML docs.
 
@@ -159,40 +160,6 @@ this.
   buildout script::
 
      $ ./bin/buildout
-
-  It will take a long time, because it has to fetch many, many
-  packages and also a complete openoffice package of about 130 MB.
-
-  To make the freshly created uno package available, you have to
-  register the libs in the ``parts/openoffice/program``
-  directory. This can be done as superuser::
-
-     # ldconfig /home/zope/psj.policy/parts/openoffice/program
-
-  or whatever the path on your system looks like.
-
-  When you're done, the following should work without error::
-
-     $ ./bin/zopepy
-     
-     >>> import uno
-
-  What will *not* work, is the following::
-
-     $ ./bin/zopepy
-
-     >>> from lxml import etree
-
-  This is, because OOo comes with (rather old) replacements for the
-  XSLT and XML2 libs, which are normally already installed (in newer
-  versions) on a recent Linux system. Therefore, we **remove** those
-  OOo libs:: 
-
-     $ rm parts/openoffice/program/libxslt.so*
-     $ rm parts/openoffice/program/libxml2.so*
-
-  Afterwards, both examples mentioned above should work.
-
 
 4) Start the OOo server
 

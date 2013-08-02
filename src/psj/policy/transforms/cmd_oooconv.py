@@ -57,7 +57,7 @@ class Document(commandtransform):
         name = self.name()
         self.tmpdir, self.fullname = self.initialize_tmpdir(
             data, filename=name)
-        
+
     def __del__(self):
         """Remove the temporary directory and loop on all base
         destructors.
@@ -79,7 +79,7 @@ class Document(commandtransform):
         """Convert the document.
         """
         name = self.name()
-        
+
         response = ooo_convert.convertToHTML(
             filename = name, data = self.orig_data)
         newdir = os.path.dirname(response.message)
@@ -114,11 +114,11 @@ class Document(commandtransform):
             raise IOError('Could not convert: %s' % name)
         pdffilepath = result.message
         pdf = open(pdffilepath, 'r').read()
-        
+
         # Remove temporary dir...
         shutil.rmtree(os.path.dirname(pdffilepath))
         return pdf
-        
+
     def tidy(self, filepath):
         """Run tidy over HTML output can produce clean XHTML.
 
@@ -145,7 +145,7 @@ class Document(commandtransform):
                  'namebaz'
                  which in the calling function will lead to
                  '<div class='namebaz'>Value</div>'
-        """ 
+        """
         attrs = re.findall('[\w]+=[\w]+', tag)
         marker = ''.join([x.lower().split('=')[1] for x in attrs])
         return marker
@@ -171,11 +171,11 @@ class Document(commandtransform):
                 line = re.sub('<P[^>]+>(<div .*>.*</div>)</P>', r'\1', line)
             outfile.write(line)
 
-            
+
         # Copy file back to origin...
         outfile.seek(0)
         open(filepath, 'wb').write(outfile.read())
-        
+
         outfile.close()
         os.remove(outfilepath)
         return

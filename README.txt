@@ -75,59 +75,19 @@ You need the following things to install this package:
 
     $ sudo easy_install-2.4 setuptools
 
-- **The Python UNO libs**
-
-  The Python version you use here, must provide the ``pyuno``
-  library. This library is needed to talk to the locally started
-  OpenOffice.org (OOo) server. You can check this by typing::
-
-     $ python2.4 -c 'import uno'
-
-  If you get an error message, then  you're into trouble. Some Linux
-  distributions offer a pyuno package for the system Python. Ubuntu
-  users can install it like this::
-
-     $ apt-get install python-uno
-
-  Workaround:
-
-    For Linux systems that have no pyuno installed, also the following
-    approach is known to work:
-
-    Modify the ``openoffice`` section in ``buildout.cnf`` such, that
-    it reads::
-
-      ...
-      install-pyuno-egg = yes
-      ...
-
-    Then run buildout again. Afterwards, you have to set the
-    ``LD_LIBRARY_PATH`` to::
-
-      <YOURBUILDOUTPATH>/parts/openoffice/program
-
-    before starting any of the generated scripts. For example instead
-    of simply::
-
-      $ bin/instance
-
-    you must use::
-
-      $ LD_LIBRARY_PATH=<YOURBUILDOUTPATH>/parts/openoffice/program \
-         bin/instance
-
-    or put this path into your system wide library path (something you
-    don't want to do).
-
 
 Installation
 ============
 
 First, make sure your system meets the requirements mentioned above.
 
-`psj` uses a `zc.buildout`-driven installation process, that has to be
-initialized first. Because ``buildout`` needs a fairly recent version
-of ``setuptools``, you should update your version of it::
+Using `zc.buildout`
+-------------------
+
+`psj` can be installed by a `zc.buildout`-driven installation process,
+that has to be initialized first. Because ``buildout`` needs a fairly
+recent version of ``setuptools``, you should update your version of
+it::
 
     $ sudo easy_install -U setuptools
 
@@ -158,3 +118,18 @@ If you happen to change the values in `buildout.cfg`, you have to
 You can run the tests using something like::
 
     $ bin/instance test -s psj.policy
+
+Using Python-eggs
+-----------------
+
+If you use `psj.policy` as part of another package, you can simply
+install it using `easy_install` and the Python Package Index (PyPI).::
+
+    $ easy_install psj.policy
+
+which will install the latest released version. If you have psj.policy
+already installed, you can update using::
+
+    $ easy_install -U psj.policy
+
+
