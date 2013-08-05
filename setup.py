@@ -15,6 +15,10 @@ long_description = (
     + '********\n'
     )
 
+tests_require = [
+    'Products.Archetypes',
+    ]
+
 setup(
     name='psj.policy',
     version='1.0dev',
@@ -45,6 +49,10 @@ setup(
         'lxml',
         'ulif.openoffice',
         ],
+    tests_require=tests_require,
+    extras_require={
+        'tests': tests_require,
+        },
     entry_points="""
       # -*- Entry points: -*-
       """,
