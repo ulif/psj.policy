@@ -17,14 +17,14 @@ long_description = (
 
 setup(
     name='psj.policy',
-    version='0.4dev',
+    version='1.0dev',
     author='Uli Fouquet',
     author_email='uli@gnufix.de',
     url = 'http://pypi.python.org/pypi/psj.policy',
     description='Plone Scholarly Journal - the site policy',
     long_description=long_description,
     license='GPL',
-    keywords="zope policy scholarly scholar journal plone plone3",
+    keywords="zope policy scholarly scholar journal plone plone3 plone4",
     classifiers=['Development Status :: 3 - Alpha',
                  'Environment :: Web Environment',
                  'Intended Audience :: Developers',

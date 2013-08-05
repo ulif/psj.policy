@@ -1,10 +1,12 @@
 Changelog
 *********
 
-0.4 (unreleased)
+1.0dev (unreleased)
 ================
 
-* No changes yet.
+* Major rewrite to become compatible with Plone 4.x
+
+* Moved module root from `src` to egg root.
 
 0.3 (2013-08-02)
 ================
