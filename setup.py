@@ -17,6 +17,7 @@ long_description = (
 
 tests_require = [
     'Products.Archetypes',
+    'Products.CMFTestCase',
     ]
 
 setup(
