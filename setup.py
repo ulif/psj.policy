@@ -34,9 +34,7 @@ setup(
                  'Framework :: Plone',
                  "Topic :: Software Development :: Libraries :: Python Modules",
                  ],
-
-    packages=find_packages('src'),
-    package_dir = {'': 'src'},
+    packages=find_packages(exclude='ez_setup'),
     namespace_packages = ['psj'],
     include_package_data = True,
     zip_safe=False,
