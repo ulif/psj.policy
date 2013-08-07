@@ -78,7 +78,7 @@ class Document(commandtransform):
     def __init__(self, name, data,
                  url="http://127.0.0.1:8000/docs/",
                  username=None,
-                 password=None
+                 password=None,
                  conv_options=None):
         """Initialize document.
 
