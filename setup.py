@@ -16,8 +16,7 @@ long_description = (
     )
 
 tests_require = [
-    'Products.Archetypes',
-    'Products.CMFTestCase',
+    'plone.app.testing',
     ]
 
 setup(
@@ -45,10 +44,12 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
-        'ulif.plone.testsetup',
         # -*- Extra requirements: -*-
+        'grokcore.component',
         'lxml',
         'ulif.openoffice',
+        'Plone',
+        'Products.Archetypes',
         ],
     tests_require=tests_require,
     extras_require={
@@ -56,5 +57,7 @@ setup(
         },
     entry_points="""
       # -*- Entry points: -*-
+      [z3c.autoinclude.plugin]
+      target = plone
       """,
 )
