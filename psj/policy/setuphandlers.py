@@ -27,21 +27,9 @@ PRODUCT_DEPENDENCIES = ()
 
 def registerTransform(site, out, name, module):
     transforms = getToolByName(site, 'portal_transforms')
-    try:
-        transforms.manage_addTransform(name, module)
-        print >> out, "Registered transform", name
-    except:
-        print >> out, "Transform %s already registered. Try reregister." % name
-        try:
-            transforms.unregisterTransform(name)
-            transforms.manage_addTransform(name, module)
-        except KeyError:
-            print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-            print "WARNING!"
-            print "The %s transform could not be installed!" % name
-            print "Try registering it manually!"
-            print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        pass
+    transforms.manage_addTransform(name, module)
+    print >> out, "Registered transform", name
+    return
 
 
 def unregisterTransform(site, out, name):
@@ -51,6 +39,7 @@ def unregisterTransform(site, out, name):
         print >> out, "Removed transform", name
     except AttributeError:
         print >> out, "Could not remove transform", name, "(not found)"
+    return
 
 
 def register_products(site, out, reinstall=False):
@@ -73,9 +62,10 @@ def install(site):
     # Register transforms
     for name, module in [
         ('odt_to_html', 'psj.policy.transforms.odt_to_html'),
-        ('odt_to_pdf', 'psj.policy.transforms.odt_to_pdf'),
-        ('doc_to_html', 'psj.policy.transforms.doc_to_html'),
-        ('doc_to_pdf', 'psj.policy.transforms.doc_to_pdf'), ]:
+        #('odt_to_pdf', 'psj.policy.transforms.odt_to_pdf'),
+        #('doc_to_html', 'psj.policy.transforms.doc_to_html'),
+        #('doc_to_pdf', 'psj.policy.transforms.doc_to_pdf'),
+        ]:
         print >> out, "Installing %s transform" % name
         registerTransform(site, out, name, module)
     # Reregister standard transformations, so that they appear in the
