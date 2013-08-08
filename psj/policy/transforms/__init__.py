@@ -3,6 +3,7 @@ modules = [
     'odt_to_html',
     'odt_to_pdf',
     'doc_to_html',
+    'doc_to_pdf',
     ]
 
 g = globals()
