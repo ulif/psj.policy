@@ -16,11 +16,10 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##
-import os
-from os.path import dirname, join, abspath
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from psj.policy.transforms.cmd_oooconv import Document
+
 
 class Odt2Pdf(object):
     """A transformation from OpenOffice docs to PDF/A.
@@ -49,6 +48,7 @@ class Odt2Pdf(object):
         pdf = document.convertToPDF()
         cache.setData(pdf)
         return cache
+
 
 def register():
     return Odt2Pdf()
