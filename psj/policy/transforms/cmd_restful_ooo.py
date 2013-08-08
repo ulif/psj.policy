@@ -29,12 +29,10 @@ import re
 import restclient
 import shutil
 import tempfile
-from os.path import isdir, dirname, join, abspath, splitext
-from StringIO import StringIO
+from os.path import isdir
 
 from Products.PortalTransforms.libtransforms.commandtransform import (
     commandtransform,)
-from Products.PortalTransforms.libtransforms.utils import sansext
 #from ulif.openoffice.client import PyUNOServerClient
 
 #client = PyUNOServerClient()
@@ -89,7 +87,7 @@ class Document(commandtransform):
         Create a temporary directory for conversion.
         """
         self.orig_data = data
-        self.username = usernam
+        self.username = username
         self.password = password
         self.conv_options = conv_options
         commandtransform.__init__(self, name)

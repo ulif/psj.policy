@@ -18,8 +18,6 @@
 ##
 """Convert MS words doc documents to PDF using OOo.
 """
-import os
-from os.path import dirname, join, abspath
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from psj.policy.transforms.cmd_oooconv import Document

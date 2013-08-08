@@ -32,11 +32,9 @@ documents.
 """
 import os
 from os.path import isdir, dirname, join, abspath
-from StringIO import StringIO
 from lxml import etree
 from Products.PortalTransforms.libtransforms.commandtransform import (
     commandtransform,)
-from Products.PortalTransforms.libtransforms.utils import sansext
 
 XSL_STYLESHEET = abspath(join(dirname(__file__), 'document2xhtml.xsl'))
 

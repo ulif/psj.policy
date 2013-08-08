@@ -25,12 +25,10 @@ import os
 import re
 import shutil
 import tempfile
-from os.path import isdir, dirname, join, abspath, splitext
-from StringIO import StringIO
+from os.path import isdir
 
 from Products.PortalTransforms.libtransforms.commandtransform import (
     commandtransform,)
-from Products.PortalTransforms.libtransforms.utils import sansext
 from ulif.openoffice.client import PyUNOServerClient
 
 client = PyUNOServerClient()
@@ -81,7 +79,6 @@ class Document(commandtransform):
         response = ooo_convert.convertToHTML(
             filename=name, data=self.orig_data)
         newdir = os.path.dirname(response.message)
-        status = response.status
         htmlfilepath = response.message
         if response.status != 200:
             raise IOError('Could not convert: %s' % name)
@@ -105,7 +102,6 @@ class Document(commandtransform):
 
     def convertToPDF(self):
         name = self.name()
-        curr_path = None
         fullpath = os.path.join(self.tmpdir, name)
         result = ooo_convert.convertFileToPDF(path=fullpath)
         if result.status != 200:
