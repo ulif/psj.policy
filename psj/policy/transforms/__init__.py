@@ -2,6 +2,7 @@ from Products.PortalTransforms.libtransforms.utils import MissingBinary
 modules = [
     'odt_to_html',
     'odt_to_pdf',
+    'doc_to_html',
     ]
 
 g = globals()
