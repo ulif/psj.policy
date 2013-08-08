@@ -1,20 +1,17 @@
 ##
-## cmd_oooconv.py
-## Login : <uli@pu.smp.net>
-## Started on  Thu Mar 13 11:57:58 2008 Uli Fouquet
-## $Id$
-## 
-## Copyright (C) 2008 Uli Fouquet
+## cmd_restful_ooo.py
+##
+## Copyright (C) 2008, 2013 Uli Fouquet
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
 ## (at your option) any later version.
-## 
+##
 ## This program is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
-## 
+##
 ## You should have received a copy of the GNU General Public License
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
@@ -47,6 +44,7 @@ from Products.PortalTransforms.libtransforms.utils import sansext
 # one appears in one line...
 #SDFIELD_RE = re.compile(r'<SDFIELD[^>]*>((.(?!<SDFIELD))*)</SDFIELD>')
 
+
 def unzip(path, dst_dir):
     """Unzip the files stored in zipfile `path` in `dst_dir`.
 
@@ -70,6 +68,7 @@ def unzip(path, dst_dir):
         outfile.close()
     zf.close()
     return
+
 
 class Document(commandtransform):
     """A document that can be unzipped and processed.
@@ -126,12 +125,12 @@ class Document(commandtransform):
             self.url,
             async=False,
             resp=True,
-            credentials = (self.username, self.password),
-            params = self.conv_options,
-            files = dict(
+            credentials=(self.username, self.password),
+            params=self.conv_options,
+            files=dict(
                 doc=dict(
-                    file = self.orig_data,
-                    filename = name)
+                    file=self.orig_data,
+                    filename=name)
                 ),
             )
         #response = ooo_convert.convertToHTML(
@@ -140,14 +139,14 @@ class Document(commandtransform):
         #status = response.status
         #htmlfilepath = response.message
         if response['status'] != '200':
-            raise IOError('Could not convert: %s' % name )
+            raise IOError('Could not convert: %s' % name)
 
         newdir = tempfile.mkdtemp()
         # unzip result
         zip_path = os.path.join(newdir, 'result.zip')
-        open(zip_path, 'wb').write(doc) # write zip to disk
+        open(zip_path, 'wb').write(doc)  # write zip to disk
         unzip(zip_path, newdir)
-        os.unlink(zip_path) # Remove zip file.
+        os.unlink(zip_path)              # Remove zip file.
 
         # Copy the source file to new location...
         try:
@@ -220,18 +219,17 @@ class Document(commandtransform):
         tmp_fd, outfilepath = tempfile.mkstemp()
         outfile = os.fdopen(tmp_fd, 'w+b')
         for line in open(filepath, 'rb'):
-            tags =  re.findall('((<SDFIELD[^>]+>)([^<]+)</SDFIELD>)', line)
+            tags = re.findall('((<SDFIELD[^>]+>)([^<]+)</SDFIELD>)', line)
             if not tags:
                 outfile.write(line)
                 continue
             for tag in tags:
                 marker = self.getMarker(tag[1])
-                replacement =  '<div class="%s">%s</div>' % (marker, tag[2])
+                replacement = '<div class="%s">%s</div>' % (marker, tag[2])
                 line = line.replace(tag[0], replacement)
                 # Remove embracing <P> tags...
                 line = re.sub('<P[^>]+>(<div .*>.*</div>)</P>', r'\1', line)
             outfile.write(line)
-
 
         # Copy file back to origin...
         outfile.seek(0)

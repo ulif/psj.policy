@@ -24,6 +24,7 @@ from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from psj.policy.transforms.cmd_oooconv import Document
 
+
 class Doc2Pdf(object):
     """A transformation from MS word docs to PDF.
 
@@ -61,6 +62,7 @@ class Doc2Pdf(object):
         pdf = document.convertToPDF()
         cache.setData(pdf)
         return cache
+
 
 def register():
     return Doc2Pdf()

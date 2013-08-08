@@ -24,6 +24,7 @@ from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from psj.policy.transforms.cmd_oooconv import Document
 
+
 class Doc2Html(object):
     """A transformation from MS word docs to HTML.
     """
@@ -68,6 +69,7 @@ class Doc2Html(object):
         cache.setData(html)
         cache.setSubObjects(objects)
         return cache
+
 
 def register():
     return Doc2Html()
