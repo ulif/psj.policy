@@ -23,6 +23,7 @@ class Odt2HtmlUnittests(unittest.TestCase):
         self.assertEqual(trans.output_encoding, 'utf-8')
         self.assertEqual(trans.name(), 'odt_to_html')
 
+
 class Odt2HtmlIntegrationTests(IntegrationTestCase):
 
     def test_registered(self):

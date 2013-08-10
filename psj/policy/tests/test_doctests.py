@@ -3,6 +3,7 @@ import unittest
 from Testing import ZopeTestCase as ztc
 from psj.policy.testing import FunctionalTestCase
 
+
 def test_suite():
     suite = unittest.TestSuite([
 
