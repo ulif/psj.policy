@@ -105,11 +105,17 @@ class Document(commandtransform):
 
     def convertToPDF(self):
         name = self.name()
-        fullpath = os.path.join(self.tmpdir, name)
-        result = ooo_convert.convertFileToPDF(path=fullpath)
-        if result.status != 200:
-            raise IOError('Could not convert: %s' % name)
-        pdffilepath = result.message
+        src_path = os.path.join(self.tmpdir, name)
+        pdffilepath, cache_key, metadata = ooo_convert.convert(
+            src_path,
+            {'oocp-out-fmt': 'pdf',
+             'oocp-pdf-version': 'yes',
+             'meta-procord': 'oocp',
+             })
+        if metadata['error']:
+            descr = metadata.get('error-descr', 'Descr. not avail.')
+            raise IOError('Could not convert: %s [%s]' % (name, descr))
+
         pdf = open(pdffilepath, 'r').read()
 
         # Remove temporary dir...
