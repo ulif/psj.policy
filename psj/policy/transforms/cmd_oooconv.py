@@ -76,7 +76,6 @@ class Document(commandtransform):
         """
         name = self.name()
         src_path = os.path.join(self.tmpdir, name)
-
         # Convert to HTML, new doc will be in resultpath
         resultpath, cache_key, metadata = ooo_convert.convert(
             src_path,
@@ -85,20 +84,8 @@ class Document(commandtransform):
         if metadata['error']:
             descr = metadata.get('error-descr', 'Descr. not avail.')
             raise IOError('Could not convert: %s [%s]' % (name, descr))
-
         newdir = os.path.dirname(resultpath)
         html = open(resultpath, 'r').read()
-
-        # Copy the source file to new location...
-        # XXX: is this really necessary?
-        try:
-            shutil.copy2(os.path.join(self.tmpdir, name),
-                         os.path.join(newdir, name))
-        except:
-            # No source?
-            pass
-
-        # Remove old tempdir...
         self.cleanDir(self.tmpdir)
         self.tmpdir = newdir
         return html
