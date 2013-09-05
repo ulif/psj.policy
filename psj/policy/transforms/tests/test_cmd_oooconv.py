@@ -1,10 +1,9 @@
 # tests for cmd_oooconv module
 import os
-import shutil
-import tempfile
 import unittest
 from psj.policy.transforms.cmd_oooconv import Document
 from Products.PortalTransforms.data import datastream
+
 
 class DocumentTests(unittest.TestCase):
 
