@@ -40,15 +40,13 @@ SDFIELD_RE = re.compile(r'<SDFIELD[^>]*>((.(?!<SDFIELD))*)</SDFIELD>')
 
 
 class Document(commandtransform):
-    """A document that can be unzipped and processed with lxml.
+    """A document that can be converted via ulif.openoffice client.
+
+    `name` - basename of file
+
+    `data` - (binary) data of file, the file contents
     """
-
     def __init__(self, name, data):
-        """Initialize document.
-
-        Create a temporary directory for conversion.
-        """
-        self.orig_data = data
         commandtransform.__init__(self, name)
         name = self.name()
         self.tmpdir, self.fullname = self.initialize_tmpdir(
@@ -73,6 +71,12 @@ class Document(commandtransform):
 
     def convert(self):
         """Convert the document to HTML.
+
+        Returns the main document content as string. Additional
+        documents (images, etc.) which are result of the conversion
+        are placed in the `tmpdir` of this `Document`.
+
+        Raises `IOError` if conversion fails.
         """
         name = self.name()
         src_path = os.path.join(self.tmpdir, name)
@@ -91,6 +95,12 @@ class Document(commandtransform):
         return html
 
     def convertToPDF(self):
+        """Convert the document to PDF.
+
+        Returns the generated document contents as string.
+
+        Raises `IOError` if conversion fails.
+        """
         name = self.name()
         src_path = os.path.join(self.tmpdir, name)
         pdffilepath, cache_key, metadata = ooo_convert.convert(
