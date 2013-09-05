@@ -257,9 +257,9 @@ Now we let the portal transforms transform this document:
    ...                             mimetype=cruel_docx_mime_type)
    >>> html = data.getData()
    >>> print html
-   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+   <html xmlns="http://www.w3.org/1999/xhtml">
    ...Auch gibt es niemanden, der den Schmerz an sich liebt...
-   </HTML>
+   </html>
 
 The .docx to .pdf transform
 ---------------------------
@@ -267,7 +267,7 @@ The .docx to .pdf transform
 The trasformation from MS .docx files to PDF should also be available
 after startup:
 
-   >>> doc_trans_name, doc_transform =  [x for x in transforms.items() 
+   >>> doc_trans_name, doc_transform =  [x for x in transforms.items()
    ...                                   if x[0] == 'doc_to_pdf'][0]
    >>> doc_transform
    <Transform at /plone/portal_transforms/doc_to_pdf>
