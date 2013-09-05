@@ -29,9 +29,9 @@ from os.path import isdir
 
 from Products.PortalTransforms.libtransforms.commandtransform import (
     commandtransform,)
-from ulif.openoffice.client import PyUNOServerClient
+from ulif.openoffice.client import Client
 
-client = PyUNOServerClient()
+client = Client()
 ooo_convert = client
 
 # This RE finds all text in between SDFIELD tags, even if more than
@@ -72,28 +72,31 @@ class Document(commandtransform):
                 base.__del__(self)
 
     def convert(self):
-        """Convert the document.
+        """Convert the document to HTML.
         """
         name = self.name()
+        src_path = os.path.join(self.tmpdir, name)
 
-        response = ooo_convert.convertToHTML(
-            filename=name, data=self.orig_data)
-        newdir = os.path.dirname(response.message)
-        htmlfilepath = response.message
-        if response.status != 200:
-            raise IOError('Could not convert: %s' % name)
+        # Convert to HTML, new doc will be in resultpath
+        resultpath, cache_key, metadata = ooo_convert.convert(
+            src_path,
+            {'oocp-out-fmt': 'html',
+             'meta-procord': 'oocp,tidy,html_cleaner'})
+        if metadata['error']:
+            descr = metadata.get('error-descr', 'Descr. not avail.')
+            raise IOError('Could not convert: %s [%s]' % (name, descr))
+
+        newdir = os.path.dirname(resultpath)
+        html = open(resultpath, 'r').read()
 
         # Copy the source file to new location...
+        # XXX: is this really necessary?
         try:
             shutil.copy2(os.path.join(self.tmpdir, name),
                          os.path.join(newdir, name))
         except:
             # No source?
             pass
-
-        # Clean up the HTML code...
-        self.tidy(htmlfilepath)
-        html = open(htmlfilepath, 'r').read()
 
         # Remove old tempdir...
         self.cleanDir(self.tmpdir)
