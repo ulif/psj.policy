@@ -34,6 +34,21 @@ class Odt2Html(object):
     output = 'text/html'
     output_encoding = 'utf-8'
 
+    def __init__(self, name=None, cache_dir=''):
+        self.config = {'cache_dir': cache_dir}
+        self.config_metadata = {
+        'cache_dir': (
+            'string', 'Cache Directory',
+            'Directory for caching results. Leave empty for no cache.'),
+        }
+        if name:
+            self.__name__ = name
+
+    def __getattr__(self, name):
+        if name in self.config:
+            return self.config[name]
+        raise AttributeError(name)
+
     def name(self, name=None):
         """Return the name of the transform instance
 
@@ -48,7 +63,8 @@ class Odt2Html(object):
         filename = filename or 'unknown.odt'
         if not filename.lower().endswith('.odt'):
             filename += '.odt'
-        document = Document(filename, data)
+        cache_dir = self.cache_dir or None
+        document = Document(filename, data, cache_dir=cache_dir)
         html = document.convert()
         sub_objects_paths = [document.tmpdir,
                              os.path.join(document.tmpdir, 'Pictures')]
