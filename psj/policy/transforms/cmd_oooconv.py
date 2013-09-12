@@ -42,11 +42,12 @@ class Document(commandtransform):
 
     `data` - (binary) data of file, the file contents
     """
-    def __init__(self, name, data):
+    def __init__(self, name, data, cache_dir=None):
         commandtransform.__init__(self, name)
         name = self.name()
         self.tmpdir, self.fullname = self.initialize_tmpdir(
             data, filename=name)
+        self.cache_dir = cache_dir
 
     def __del__(self):
         """Remove the temporary directory and loop on all base
@@ -77,7 +78,8 @@ class Document(commandtransform):
         name = self.name()
         src_path = os.path.join(self.tmpdir, name)
         # Convert to HTML, new doc will be in resultpath
-        resultpath, cache_key, metadata = ooo_convert.convert(
+        client = Client(cache_dir=self.cache_dir)
+        resultpath, cache_key, metadata = client.convert(
             src_path,
             {'oocp-out-fmt': 'html',
              'meta-procord': 'oocp,tidy,html_cleaner'})

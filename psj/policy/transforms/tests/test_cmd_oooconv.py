@@ -23,6 +23,7 @@ class DocumentTests(unittest.TestCase):
         self.doc = Document('mytestdoc.doc', self.doc_simple1)
         assert self.doc.tmpdir is not None
         assert self.doc.fullname[-14:] == '/mytestdoc.doc'
+        assert self.doc.cache_dir is None
 
     def test_del_removes_tmp_dir(self):
         # Deleted `Document`s do not leave any temp dirs
@@ -31,3 +32,9 @@ class DocumentTests(unittest.TestCase):
         assert os.path.isfile(path)
         del self.doc
         assert not os.path.isfile(path)
+
+    def test_convert(self):
+        # We can convert docs to HTML
+        self.doc = Document('mytestdoc.doc', self.doc_simple1)
+        html = self.doc.convert()
+        assert 'A simple document.</p>' in html
