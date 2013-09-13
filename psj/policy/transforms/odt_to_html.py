@@ -22,8 +22,6 @@ from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from psj.policy.transforms.cmd_oooconv import Document
 
-XSL_STYLESHEET = abspath(join(dirname(__file__), 'document2xhtml.xsl'))
-
 
 class Odt2Html(object):
     """A transformation from OpenOffice docs to HTML.
