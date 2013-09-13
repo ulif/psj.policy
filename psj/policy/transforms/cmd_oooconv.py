@@ -31,9 +31,6 @@ from Products.PortalTransforms.libtransforms.commandtransform import (
     commandtransform,)
 from ulif.openoffice.client import Client
 
-client = Client()
-ooo_convert = client
-
 
 class Document(commandtransform):
     """A document that can be converted via ulif.openoffice client.
@@ -48,6 +45,7 @@ class Document(commandtransform):
         self.tmpdir, self.fullname = self.initialize_tmpdir(
             data, filename=name)
         self.cache_dir = cache_dir
+        self.client = Client(cache_dir=cache_dir)
 
     def __del__(self):
         """Remove the temporary directory and loop on all base
@@ -78,8 +76,7 @@ class Document(commandtransform):
         name = self.name()
         src_path = os.path.join(self.tmpdir, name)
         # Convert to HTML, new doc will be in resultpath
-        client = Client(cache_dir=self.cache_dir)
-        resultpath, cache_key, metadata = client.convert(
+        resultpath, cache_key, metadata = self.client.convert(
             src_path,
             {'oocp-out-fmt': 'html',
              'meta-procord': 'oocp,tidy,html_cleaner'})
@@ -101,7 +98,7 @@ class Document(commandtransform):
         """
         name = self.name()
         src_path = os.path.join(self.tmpdir, name)
-        pdffilepath, cache_key, metadata = ooo_convert.convert(
+        pdffilepath, cache_key, metadata = self.client.convert(
             src_path,
             {'oocp-out-fmt': 'pdf',
              'oocp-pdf-version': 'yes',
