@@ -21,10 +21,11 @@
 import os
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
+from psj.policy.transforms import OOOTransformBase
 from psj.policy.transforms.cmd_oooconv import Document
 
 
-class Doc2Html(object):
+class Doc2Html(OOOTransformBase):
     """A transformation from MS word docs to HTML.
     """
     implements(ITransform)
