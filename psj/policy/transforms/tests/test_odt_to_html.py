@@ -6,7 +6,16 @@ import unittest
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.data import datastream
 from zope.interface.verify import verifyObject, verifyClass
+from psj.policy.testing import IntegrationTestCase
 from psj.policy.transforms.odt_to_html import Odt2Html, register
+
+
+class HelperTests(unittest.TestCase):
+    # Tests for non-Odt2Html components in module
+
+    def test_register(self):
+        # there is a register function that returns an appropriate object
+        assert isinstance(register(), Odt2Html)
 
 
 class Odt2HtmlTests(unittest.TestCase):
@@ -58,9 +67,9 @@ class Odt2HtmlTests(unittest.TestCase):
         self.assertEqual(idatastream.getMetadata(), {})
 
 
-class HelperTests(unittest.TestCase):
-    # Tests for non-Odt2Html components in module
+class Odt2HtmlIntegrationTests(IntegrationTestCase):
 
-    def test_register(self):
-        # there is a register function that returns an appropriate object
-        assert isinstance(register(), Odt2Html)
+    def test_registered(self):
+        # the transform is registered in a standard plonesite after install
+        transforms = self.portal.portal_transforms
+        assert 'odt_to_html' in transforms.keys()
