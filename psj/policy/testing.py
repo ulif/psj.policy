@@ -19,6 +19,7 @@
 """Test support/helpers for psj.policy.
 """
 import unittest
+from Testing.ZopeTestCase import Functional
 from plone.app.testing import (
     PloneSandboxLayer, PLONE_FIXTURE, IntegrationTesting, FunctionalTesting
     )
@@ -70,7 +71,7 @@ class IntegrationTestCase(unittest.TestCase):
         return self.layer['portal']
 
 
-class FunctionalTestCase(unittest.TestCase):
+class FunctionalTestCase(Functional, unittest.TestCase):
 
     layer = MY_PRODUCT_FUNCTIONAL_TESTING
 
