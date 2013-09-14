@@ -27,8 +27,6 @@ class OOOTransformBase(object):
     This base supports configuration parameters shared by all local
     OO.o transforms.
     """
-    implements(ITransform)
-
     def __init__(self, name=None, cache_dir=''):
         self.config = {'cache_dir': cache_dir}
         self.config_metadata = {
