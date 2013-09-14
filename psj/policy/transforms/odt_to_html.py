@@ -17,7 +17,6 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##
 import os
-from os.path import dirname, join, abspath
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from psj.policy.transforms import OOOTransformBase
