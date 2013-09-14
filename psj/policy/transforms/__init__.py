@@ -16,7 +16,34 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##
+from zope.interface import implements
+from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
+
+
+class OOOTransformBase(object):
+    """A transformation base for OpenOffice.org-based transforms.
+
+    This base supports configuration parameters shared by all local
+    OO.o transforms.
+    """
+    implements(ITransform)
+
+    def __init__(self, name=None, cache_dir=''):
+        self.config = {'cache_dir': cache_dir}
+        self.config_metadata = {
+        'cache_dir': (
+            'string', 'Cache Directory',
+            'Directory for caching results. Leave empty for no cache.'),
+        }
+        if name:
+            self.__name__ = name
+
+    def __getattr__(self, name):
+        if name in self.config:
+            return self.config[name]
+        raise AttributeError(name)
+
 
 modules = [
     'odt_to_html',
