@@ -20,10 +20,11 @@ import os
 from os.path import dirname, join, abspath
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
+from psj.policy.transforms import OOOTransformBase
 from psj.policy.transforms.cmd_oooconv import Document
 
 
-class Odt2Html(object):
+class Odt2Html(OOOTransformBase):
     """A transformation from OpenOffice docs to HTML.
     """
     implements(ITransform)
@@ -31,21 +32,6 @@ class Odt2Html(object):
     inputs = ('application/vnd.oasis.opendocument.text',)
     output = 'text/html'
     output_encoding = 'utf-8'
-
-    def __init__(self, name=None, cache_dir=''):
-        self.config = {'cache_dir': cache_dir}
-        self.config_metadata = {
-        'cache_dir': (
-            'string', 'Cache Directory',
-            'Directory for caching results. Leave empty for no cache.'),
-        }
-        if name:
-            self.__name__ = name
-
-    def __getattr__(self, name):
-        if name in self.config:
-            return self.config[name]
-        raise AttributeError(name)
 
     def name(self, name=None):
         """Return the name of the transform instance
