@@ -18,10 +18,11 @@
 ##
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
+from psj.policy.transforms import OOOTransformBase
 from psj.policy.transforms.cmd_oooconv import Document
 
 
-class Odt2Pdf(object):
+class Odt2Pdf(OOOTransformBase):
     """A transformation from OpenOffice docs to PDF/A.
     """
     implements(ITransform)
@@ -36,7 +37,7 @@ class Odt2Pdf(object):
         The second parameter is only here to satisfy the interface
         requirements, which seem to be broken.
         """
-        return 'odt_to_html'
+        return 'odt_to_pdf'
 
     def convert(self, data, cache, filename=None, **kwargs):
         """Convert the data, store the result in idata and return that.
