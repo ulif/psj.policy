@@ -40,6 +40,14 @@ class Odt2HtmlTests(unittest.TestCase):
         verifyClass(ITransform, Odt2Html)
         verifyObject(ITransform, obj)
 
+    def test_mimetypes(self):
+        # we have proper mimetypes set
+        transform = Odt2Html()
+        self.assertEqual(transform.output, 'text/html')
+        self.assertEqual(transform.output_encoding, 'utf-8')
+        self.assertEqual(transform.inputs,
+                         ('application/vnd.oasis.opendocument.text',))
+
     def test_name(self):
         # we can get the transform name
         transform = Odt2Html()
