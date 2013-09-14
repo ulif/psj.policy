@@ -51,8 +51,8 @@ class Odt2HtmlTests(unittest.TestCase):
     def test_name(self):
         # we can get the transform name
         transform = Odt2Pdf()
-        self.assertEqual(transform.name(), 'odt_to_html')
-        self.assertEqual(transform.name('other_name'), 'odt_to_html')
+        self.assertEqual(transform.name(), 'odt_to_pdf')
+        self.assertEqual(transform.name('other_name'), 'odt_to_pdf')
 
     def test_cache_dir(self):
         # we can set/get a cache dir
