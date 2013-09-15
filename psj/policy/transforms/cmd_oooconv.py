@@ -28,6 +28,7 @@ from os.path import isdir
 from Products.PortalTransforms.libtransforms.commandtransform import (
     commandtransform,)
 from ulif.openoffice.client import Client
+from ulif.openoffice.helpers import copy_to_secure_location
 
 
 class Document(commandtransform):
@@ -62,7 +63,7 @@ class Document(commandtransform):
             if hasattr(base, '__del__'):
                 base.__del__(self)
 
-    def convert(self):
+    def convert(self, cache_key=None):
         """Convert the document to HTML.
 
         Returns the main document content as string. Additional
@@ -71,23 +72,29 @@ class Document(commandtransform):
 
         Raises `IOError` if conversion fails.
         """
-        name = self.name()
-        src_path = os.path.join(self.tmpdir, name)
-        # Convert to HTML, new doc will be in resultpath
-        resultpath, cache_key, metadata = self.client.convert(
-            src_path,
-            {'oocp-out-fmt': 'html',
-             'meta-procord': 'oocp,tidy,html_cleaner'})
-        if metadata['error']:
-            descr = metadata.get('error-descr', 'Descr. not avail.')
-            raise IOError('Could not convert: %s [%s]' % (name, descr))
-        newdir = os.path.dirname(resultpath)
+        resultpath = self.client.get_cached(cache_key)
+        if resultpath is not None:
+            newdir = copy_to_secure_location(resultpath)
+            resultpath = os.path.join(newdir, os.path.basename(resultpath))
+        if resultpath is None:
+            name = self.name()
+            src_path = os.path.join(self.tmpdir, name)
+            # Convert to HTML, new doc will be in resultpath
+            resultpath, cache_key, metadata = self.client.convert(
+                src_path,
+                {'oocp-out-fmt': 'html',
+                 'meta-procord': 'oocp,tidy,html_cleaner'},
+                )
+            if metadata['error']:
+                descr = metadata.get('error-descr', 'Descr. not avail.')
+                raise IOError('Could not convert: %s [%s]' % (name, descr))
+            newdir = os.path.dirname(resultpath)
         html = open(resultpath, 'r').read()
         self.cleanDir(self.tmpdir)
         self.tmpdir = newdir
-        return html
+        return html, cache_key
 
-    def convertToPDF(self):
+    def convertToPDF(self, cache_key=None):
         """Convert the document to PDF.
 
         Returns the generated document contents as string.
