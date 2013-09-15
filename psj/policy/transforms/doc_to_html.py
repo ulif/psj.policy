@@ -46,17 +46,12 @@ class Doc2Html(OOOTransformBase):
         """
         return 'doc_to_html'
 
-    def convert(self, data, cache, filename=None, mimetype=None, **kwargs):
+    def convert(self, data, cache, filename='unknown', mimetype=None, **kwargs):
         """Convert the data, store the result in idata and return that.
         """
-        extension = '.doc'
-        if mimetype is not None:
-            if mimetype == self.inputs[1]:
-                extension = '.docx'
-        filename = filename or 'unknown' + extension
-        if not os.path.splitext(filename.lower())[1] in ['.doc', '.docx']:
-            filename += extension
-        document = Document(filename, data)
+        filename = filename or 'unknown.doc'
+        cache_dir = self.cache_dir or None
+        document = Document(filename, data, cache_dir=cache_dir)
         html = document.convert()
         sub_objects_paths = [document.tmpdir,
                              os.path.join(document.tmpdir, 'Pictures')]
