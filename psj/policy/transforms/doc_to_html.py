@@ -46,7 +46,7 @@ class Doc2Html(OOOTransformBase):
         """
         return 'doc_to_html'
 
-    def convert(self, data, cache, filename='unknown', mimetype=None, **kwargs):
+    def convert(self, data, cache, filename='unknown', **kwargs):
         """Convert the data, store the result in idata and return that.
         """
         filename = filename or 'unknown.doc'
