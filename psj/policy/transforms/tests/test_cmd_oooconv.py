@@ -58,3 +58,26 @@ class DocumentTests(unittest.TestCase):
         html2, cache_key2 = self.doc.convert(cache_key=cache_key1)
         assert html1 == html2
         assert cache_key1 == cache_key2
+
+    def test_convert_to_pdf(self):
+        # We can convert docs to PDF
+        self.doc = Document('mytestdoc.doc', self.doc_simple1)
+        pdf, cache_key = self.doc.convertToPDF()
+        self.assertEqual(pdf[:6], '%PDF-1')
+        # no cache_dir, no cached doc
+        assert cache_key is None
+
+    def test_convert_to_pdf_w_cache_dir(self):
+        # We can cache after converting to PDF
+        self.doc = Document('mytestdoc.doc', self.doc_simple1, self.workdir)
+        pdf, cache_key = self.doc.convertToPDF()
+        self.assertEqual(pdf[:6], '%PDF-1')
+        self.assertEqual(cache_key, 'cc8c3b702ca3865608732f612691978b_1_1')
+
+    def test_convert_to_pdf_w_cache_key(self):
+        # Cached docs are retrieved
+        self.doc = Document('mytestdoc.doc', self.doc_simple1, self.workdir)
+        pdf1, cache_key1 = self.doc.convertToPDF()  # store doc in cache
+        pdf2, cache_key2 = self.doc.convertToPDF(cache_key=cache_key1)
+        assert pdf1 == pdf2
+        assert cache_key1 == cache_key2

@@ -66,9 +66,10 @@ class Document(commandtransform):
     def convert(self, cache_key=None):
         """Convert the document to HTML.
 
-        Returns the main document content as string. Additional
-        documents (images, etc.) which are result of the conversion
-        are placed in the `tmpdir` of this `Document`.
+        Returns the main document content as string and a cache_key
+        for quick later retrieval. Additional documents (images, etc.)
+        which are result of the conversion are placed in the `tmpdir`
+        of this `Document`.
 
         Raises `IOError` if conversion fails.
         """
@@ -97,10 +98,15 @@ class Document(commandtransform):
     def convertToPDF(self, cache_key=None):
         """Convert the document to PDF.
 
-        Returns the generated document contents as string.
+        Returns the generated document contents as string and a cache
+        key. The cache_key might be None if no cache_dir was set
+        before.
 
         Raises `IOError` if conversion fails.
         """
+        pdffilepath = self.client.get_cached(cache_key)
+        if pdffilepath is not None:
+            return open(pdffilepath, 'r').read(), cache_key
         name = self.name()
         src_path = os.path.join(self.tmpdir, name)
         pdffilepath, cache_key, metadata = self.client.convert(
@@ -112,9 +118,9 @@ class Document(commandtransform):
         if metadata['error']:
             descr = metadata.get('error-descr', 'Descr. not avail.')
             raise IOError('Could not convert: %s [%s]' % (name, descr))
-
         pdf = open(pdffilepath, 'r').read()
 
         # Remove temporary dir...
-        shutil.rmtree(os.path.dirname(pdffilepath))
-        return pdf
+        self.tmpdir = os.path.dirname(pdffilepath)
+        self.cleanDir(self.tmpdir)
+        return pdf, cache_key

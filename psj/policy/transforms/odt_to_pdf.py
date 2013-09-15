@@ -42,11 +42,12 @@ class Odt2Pdf(OOOTransformBase):
     def convert(self, data, cache, filename=None, **kwargs):
         """Convert the data, store the result in idata and return that.
         """
+        cache_dir = self.cache_dir or None
         filename = filename or 'unknown.odt'
         if not filename.lower().endswith('.odt'):
             filename += '.odt'
-        document = Document(filename, data)
-        pdf = document.convertToPDF()
+        document = Document(filename, data, cache_dir=cache_dir)
+        pdf, cache_key = document.convertToPDF()
         cache.setData(pdf)
         return cache
 

@@ -49,6 +49,7 @@ class Doc2Pdf(OOOTransformBase):
     def convert(self, data, cache, filename=None, mimetype=None, **kwargs):
         """Convert the data, store the result in idata and return that.
         """
+        cache_dir = self.cache_dir or None
         extension = '.doc'
         if mimetype is not None:
             if mimetype == self.inputs[1]:
@@ -57,8 +58,8 @@ class Doc2Pdf(OOOTransformBase):
         if not (filename.lower().endswith('.doc') or
                 filename.lower().endswith('.docx')):
             filename += extension
-        document = Document(filename, data)
-        pdf = document.convertToPDF()
+        document = Document(filename, data, cache_dir=cache_dir)
+        pdf, cache_key = document.convertToPDF()
         cache.setData(pdf)
         return cache
 
