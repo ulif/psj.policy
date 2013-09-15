@@ -1,5 +1,7 @@
 # tests for cmd_oooconv module
 import os
+import shutil
+import tempfile
 import unittest
 from psj.policy.transforms.cmd_oooconv import Document
 from Products.PortalTransforms.data import datastream
@@ -8,6 +10,7 @@ from Products.PortalTransforms.data import datastream
 class DocumentTests(unittest.TestCase):
 
     def setUp(self):
+        self.workdir = tempfile.mkdtemp()
         input_dir = os.path.join(os.path.dirname(__file__), 'input')
         self.doc_simple1_path = os.path.join(input_dir, 'simpledoc1.doc')
         self.doc_simple1 = open(self.doc_simple1_path, 'rb').read()
@@ -16,7 +19,7 @@ class DocumentTests(unittest.TestCase):
         self.doc = None   # to be set by tests
 
     def tearDown(self):
-        pass
+        shutil.rmtree(self.workdir)
 
     def test_attribs(self):
         # Documents have some attributes, notably a tmpdir and a fullpath
@@ -36,5 +39,22 @@ class DocumentTests(unittest.TestCase):
     def test_convert(self):
         # We can convert docs to HTML
         self.doc = Document('mytestdoc.doc', self.doc_simple1)
-        html = self.doc.convert()
+        html, cache_key = self.doc.convert()
         assert 'A simple document.</p>' in html
+        # no cache_dir, no cached doc
+        assert cache_key is None
+
+    def test_convert_w_cache_dir(self):
+        # We can cache after converting
+        self.doc = Document('mytestdoc.doc', self.doc_simple1, self.workdir)
+        html, cache_key = self.doc.convert()
+        assert 'A simple document.</p>' in html
+        self.assertEqual(cache_key, 'cc8c3b702ca3865608732f612691978b_1_1')
+
+    def test_convert_w_cache_key(self):
+        # Cached docs are retrieved
+        self.doc = Document('mytestdoc.doc', self.doc_simple1, self.workdir)
+        html1, cache_key1 = self.doc.convert()  # store doc in cache
+        html2, cache_key2 = self.doc.convert(cache_key=cache_key1)
+        assert html1 == html2
+        assert cache_key1 == cache_key2
