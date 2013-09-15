@@ -22,7 +22,6 @@ Converters using pyuno, i.e. OpenOffice.org in background.
 For conversion to XHTML the commandline tool 'tidy' is needed.
 """
 import os
-import shutil
 from os.path import isdir
 
 from Products.PortalTransforms.libtransforms.commandtransform import (
