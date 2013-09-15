@@ -44,8 +44,6 @@ class Odt2Html(OOOTransformBase):
         """Convert the data, store the result in idata and return that.
         """
         filename = filename or 'unknown.odt'
-        if not filename.lower().endswith('.odt'):
-            filename += '.odt'
         cache_dir = self.cache_dir or None
         document = Document(filename, data, cache_dir=cache_dir)
         html = document.convert()
