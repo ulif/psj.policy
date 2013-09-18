@@ -70,21 +70,31 @@ class Document(commandtransform):
         which are result of the conversion are placed in the `tmpdir`
         of this `Document`.
 
+        If `cache_key` is given (and a `cache_dir` set before) we will
+        lookup the cache before performing any real conversion.
+
         Raises `IOError` if conversion fails.
         """
+        name = self.name()
+        src_path = os.path.join(self.tmpdir, name)
+        options =  {'oocp-out-fmt': 'html',
+                    'meta-procord': 'oocp,tidy,html_cleaner'}
         resultpath = self.client.get_cached(cache_key)
         if resultpath is not None:
+            # Lookup cached doc by cache key (fast)
             newdir = copy_to_secure_location(resultpath)
             resultpath = os.path.join(newdir, os.path.basename(resultpath))
         if resultpath is None:
-            name = self.name()
-            src_path = os.path.join(self.tmpdir, name)
+            # Lookup cached doc by source (expensive)
+            resultpath, cache_key = self.client.get_cached_by_source(
+                src_path, options)
+            if resultpath is not None:
+                newdir = copy_to_secure_location(resultpath)
+                resultpath = os.path.join(newdir, os.path.basename(resultpath))
+        if resultpath is None:
             # Convert to HTML, new doc will be in resultpath
             resultpath, cache_key, metadata = self.client.convert(
-                src_path,
-                {'oocp-out-fmt': 'html',
-                 'meta-procord': 'oocp,tidy,html_cleaner'},
-                )
+                src_path, options)
             if metadata['error']:
                 descr = metadata.get('error-descr', 'Descr. not avail.')
                 raise IOError('Could not convert: %s [%s]' % (name, descr))
@@ -101,6 +111,9 @@ class Document(commandtransform):
         key. The cache_key might be None if no cache_dir was set
         before.
 
+        If `cache_key` is given (and a `cache_dir` set before) we will
+        lookup the cache before performing any real conversion.
+
         Raises `IOError` if conversion fails.
         """
         pdffilepath = self.client.get_cached(cache_key)
@@ -108,12 +121,17 @@ class Document(commandtransform):
             return open(pdffilepath, 'r').read(), cache_key
         name = self.name()
         src_path = os.path.join(self.tmpdir, name)
+        options = {
+            'oocp-out-fmt': 'pdf',
+            'oocp-pdf-version': 'yes',
+            'meta-procord': 'oocp',
+            }
+        pdffilepath, cache_key = self.client.get_cached_by_source(
+            src_path, options)
+        if pdffilepath is not None:
+            return open(pdffilepath, 'r').read(), cache_key
         pdffilepath, cache_key, metadata = self.client.convert(
-            src_path,
-            {'oocp-out-fmt': 'pdf',
-             'oocp-pdf-version': 'yes',
-             'meta-procord': 'oocp',
-             })
+            src_path, options)
         if metadata['error']:
             descr = metadata.get('error-descr', 'Descr. not avail.')
             raise IOError('Could not convert: %s [%s]' % (name, descr))

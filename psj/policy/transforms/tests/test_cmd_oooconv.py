@@ -81,3 +81,19 @@ class DocumentTests(unittest.TestCase):
         pdf2, cache_key2 = self.doc.convertToPDF(cache_key=cache_key1)
         assert pdf1 == pdf2
         assert cache_key1 == cache_key2
+
+    def test_convert_to_pdf_cached_wo_cache_key(self):
+        # We can get a cached doc also without a cache key (but
+        # it is extensive)
+        self.doc = Document('mytestdoc.doc', self.doc_simple1, self.workdir)
+        pdf1, cache_key1 = self.doc.convertToPDF()  # store doc in cache
+        # modfiy result to distuingish it from freshly converted doc
+        from ulif.openoffice.cachemanager import CacheManager
+        cm = CacheManager(self.workdir)
+        cached_path = cm.get_cached_file(cache_key1)
+        open(cached_path, 'wb').write('My Fake Result')
+        # now re-get the document. We should get the cached copy
+        self.doc = Document('mytestdoc.doc', self.doc_simple1, self.workdir)
+        pdf2, cache_key2 = self.doc.convertToPDF()
+        self.assertEqual(pdf2, 'My Fake Result')
+        self.assertEqual(cache_key2, cache_key1)
