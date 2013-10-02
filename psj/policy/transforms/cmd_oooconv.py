@@ -78,7 +78,7 @@ class Document(commandtransform):
         name = self.name()
         src_path = os.path.join(self.tmpdir, name)
         options =  {'oocp-out-fmt': 'html',
-                    'meta-procord': 'oocp,tidy,html_cleaner'}
+                    'meta-procord': 'oocp,tidy,html_cleaner,psj_html'}
         resultpath = self.client.get_cached(cache_key)
         if resultpath is not None:
             # Lookup cached doc by cache key (fast)
