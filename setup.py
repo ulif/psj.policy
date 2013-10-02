@@ -60,5 +60,7 @@ setup(
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]
       target = plone
+      [ulif.openoffice.processors]
+      psj_html = psj.policy.transforms.processors:PSJHTMLProcessor
       """,
 )
