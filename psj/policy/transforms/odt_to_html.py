@@ -58,7 +58,7 @@ class Odt2Html(OOOTransformBase):
                 objects = {}
                 if images:
                     document.fixImages(spath, images, objects)
-        idatastream.getMetadata()['cache_key'] = cache_key
+        idatastream.getMetadata()['cache_key_html'] = cache_key
         idatastream.setData(html)
         idatastream.setSubObjects(objects)
         return idatastream

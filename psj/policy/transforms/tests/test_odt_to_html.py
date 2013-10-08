@@ -72,7 +72,7 @@ class Odt2HtmlTests(unittest.TestCase):
             open(self.src_path2, 'r').read(),
             idatastream)
         assert '</span>' in idatastream.getData()
-        self.assertEqual(idatastream.getMetadata(), {'cache_key': None})
+        self.assertEqual(idatastream.getMetadata(), {'cache_key_html': None})
 
 
 class Odt2HtmlIntegrationTests(IntegrationTestCase):
