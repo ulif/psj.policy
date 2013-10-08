@@ -42,6 +42,9 @@ class Odt2Html(OOOTransformBase):
 
     def convert(self, data, idatastream, filename=None, **kwargs):
         """Convert the data, store the result in idata and return that.
+
+        If a cache key can be retrieved, it is stored under key
+        ``cache_key`` in `idatastream` metadata.
         """
         filename = filename or 'unknown.odt'
         cache_dir = self.cache_dir or None
@@ -55,6 +58,7 @@ class Odt2Html(OOOTransformBase):
                 objects = {}
                 if images:
                     document.fixImages(spath, images, objects)
+        idatastream.getMetadata()['cache_key'] = cache_key
         idatastream.setData(html)
         idatastream.setSubObjects(objects)
         return idatastream
