@@ -40,7 +40,7 @@ class Odt2Html(OOOTransformBase):
         """
         return 'odt_to_html'
 
-    def convert(self, data, cache, filename=None, **kwargs):
+    def convert(self, data, idatastream, filename=None, **kwargs):
         """Convert the data, store the result in idata and return that.
         """
         filename = filename or 'unknown.odt'
@@ -55,9 +55,9 @@ class Odt2Html(OOOTransformBase):
                 objects = {}
                 if images:
                     document.fixImages(spath, images, objects)
-        cache.setData(html)
-        cache.setSubObjects(objects)
-        return cache
+        idatastream.setData(html)
+        idatastream.setSubObjects(objects)
+        return idatastream
 
 
 def register():
