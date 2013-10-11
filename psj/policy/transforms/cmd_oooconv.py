@@ -29,6 +29,19 @@ from Products.PortalTransforms.libtransforms.commandtransform import (
 from ulif.openoffice.client import Client
 from ulif.openoffice.helpers import copy_to_secure_location
 
+#: A constant with u.openoffice options for HTML conversion
+OPTIONS_HTML =  {
+    'oocp-out-fmt': 'html',
+    'meta-procord': 'oocp,tidy,html_cleaner,psj_html'
+    }
+
+#: A constant with u.openoffice options for PDF conversion
+OPTIONS_PDF = {
+    'oocp-out-fmt': 'pdf',
+    'oocp-pdf-version': 'yes',
+    'meta-procord': 'oocp',
+    }
+
 
 class Document(commandtransform):
     """A document that can be converted via ulif.openoffice client.
@@ -77,8 +90,6 @@ class Document(commandtransform):
         """
         name = self.name()
         src_path = os.path.join(self.tmpdir, name)
-        options =  {'oocp-out-fmt': 'html',
-                    'meta-procord': 'oocp,tidy,html_cleaner,psj_html'}
         resultpath = self.client.get_cached(cache_key)
         if resultpath is not None:
             # Lookup cached doc by cache key (fast)
@@ -87,14 +98,14 @@ class Document(commandtransform):
         if resultpath is None:
             # Lookup cached doc by source (expensive)
             resultpath, cache_key = self.client.get_cached_by_source(
-                src_path, options)
+                src_path, OPTIONS_HTML)
             if resultpath is not None:
                 newdir = copy_to_secure_location(resultpath)
                 resultpath = os.path.join(newdir, os.path.basename(resultpath))
         if resultpath is None:
             # Convert to HTML, new doc will be in resultpath
             resultpath, cache_key, metadata = self.client.convert(
-                src_path, options)
+                src_path, OPTIONS_HTML)
             if metadata['error']:
                 descr = metadata.get('error-descr', 'Descr. not avail.')
                 raise IOError('Could not convert: %s [%s]' % (name, descr))
@@ -121,17 +132,12 @@ class Document(commandtransform):
             return open(pdffilepath, 'r').read(), cache_key
         name = self.name()
         src_path = os.path.join(self.tmpdir, name)
-        options = {
-            'oocp-out-fmt': 'pdf',
-            'oocp-pdf-version': 'yes',
-            'meta-procord': 'oocp',
-            }
         pdffilepath, cache_key = self.client.get_cached_by_source(
-            src_path, options)
+            src_path, OPTIONS_PDF)
         if pdffilepath is not None:
             return open(pdffilepath, 'r').read(), cache_key
         pdffilepath, cache_key, metadata = self.client.convert(
-            src_path, options)
+            src_path, OPTIONS_PDF)
         if metadata['error']:
             descr = metadata.get('error-descr', 'Descr. not avail.')
             raise IOError('Could not convert: %s [%s]' % (name, descr))
