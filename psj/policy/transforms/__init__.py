@@ -40,6 +40,16 @@ class OOOTransformBase(object):
             return self.config[name]
         raise AttributeError(name)
 
+    def get_cache_key(self, key_name, idatastream):
+        """Get cache key `key_name` from context of `idatastream`.
+
+        If `idatastream` has a `context` and this context has a
+        `key_name` attribute, the value of this attribute is
+        returned. Otherwise ``None`` is returned.
+        """
+        context = getattr(idatastream, 'context', None)
+        return getattr(context, key_name, None)
+
 
 modules = [
     'odt_to_html',
