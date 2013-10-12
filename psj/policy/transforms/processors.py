@@ -21,6 +21,7 @@ ulif.openoffice processors.
 """
 from ulif.openoffice.processor import BaseProcessor
 
+
 class PSJHTMLProcessor(BaseProcessor):
     """A document processor that post-processes HTML generated.
 

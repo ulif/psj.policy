@@ -30,7 +30,7 @@ from ulif.openoffice.client import Client
 from ulif.openoffice.helpers import copy_to_secure_location
 
 #: A constant with u.openoffice options for HTML conversion
-OPTIONS_HTML =  {
+OPTIONS_HTML = {
     'oocp-out-fmt': 'html',
     'meta-procord': 'oocp,tidy,html_cleaner,psj_html'
     }

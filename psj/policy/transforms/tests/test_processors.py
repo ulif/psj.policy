@@ -6,6 +6,7 @@ import unittest
 from ulif.openoffice.helpers import get_entry_points
 from psj.policy.transforms.processors import PSJHTMLProcessor
 
+
 class PSJHTMLProcessorTests(unittest.TestCase):
 
     def setUp(self):
