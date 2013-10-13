@@ -43,11 +43,13 @@ class Odt2Pdf(OOOTransformBase):
         """Convert the data, store the result in idata and return that.
         """
         cache_dir = self.cache_dir or None
+        cache_key = self.get_cache_key('cache_key_pdf', idatastream)
         filename = filename or 'unknown.odt'
         if not filename.lower().endswith('.odt'):
             filename += '.odt'
         document = Document(filename, data, cache_dir=cache_dir)
-        pdf, cache_key = document.convertToPDF()
+        pdf, cache_key = document.convertToPDF(cache_key=cache_key)
+        idatastream.getMetadata()['cache_key_pdf'] = cache_key
         idatastream.setData(pdf)
         return idatastream
 
