@@ -39,7 +39,7 @@ class Odt2Pdf(OOOTransformBase):
         """
         return 'odt_to_pdf'
 
-    def convert(self, data, cache, filename=None, **kwargs):
+    def convert(self, data, idatastream, filename=None, **kwargs):
         """Convert the data, store the result in idata and return that.
         """
         cache_dir = self.cache_dir or None
@@ -48,8 +48,8 @@ class Odt2Pdf(OOOTransformBase):
             filename += '.odt'
         document = Document(filename, data, cache_dir=cache_dir)
         pdf, cache_key = document.convertToPDF()
-        cache.setData(pdf)
-        return cache
+        idatastream.setData(pdf)
+        return idatastream
 
 
 def register():
