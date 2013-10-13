@@ -18,7 +18,7 @@ class HelperTests(unittest.TestCase):
         assert isinstance(register(), Odt2Pdf)
 
 
-class Odt2HtmlTests(unittest.TestCase):
+class Odt2PdfTests(unittest.TestCase):
     # Tests for Odt2Html class
 
     def setUp(self):
