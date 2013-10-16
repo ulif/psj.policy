@@ -46,7 +46,7 @@ class Doc2Html(OOOTransformBase):
         """
         return 'doc_to_html'
 
-    def convert(self, data, cache, filename='unknown', **kwargs):
+    def convert(self, data, idatastream, filename='unknown', **kwargs):
         """Convert the data, store the result in idata and return that.
         """
         filename = filename or 'unknown.doc'
@@ -61,9 +61,9 @@ class Doc2Html(OOOTransformBase):
                 objects = {}
                 if images:
                     document.fixImages(spath, images, objects)
-        cache.setData(html)
-        cache.setSubObjects(objects)
-        return cache
+        idatastream.setData(html)
+        idatastream.setSubObjects(objects)
+        return idatastream
 
 
 def register():
