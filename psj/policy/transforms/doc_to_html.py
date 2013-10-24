@@ -51,8 +51,9 @@ class Doc2Html(OOOTransformBase):
         """
         filename = filename or 'unknown.doc'
         cache_dir = self.cache_dir or None
+        cache_key = self.get_cache_key('cache_key_html', idatastream)
         document = Document(filename, data, cache_dir=cache_dir)
-        html, cache_key = document.convert()
+        html, cache_key = document.convert(cache_key=cache_key)
         sub_objects_paths = [document.tmpdir,
                              os.path.join(document.tmpdir, 'Pictures')]
         for path in sub_objects_paths:
@@ -61,6 +62,7 @@ class Doc2Html(OOOTransformBase):
                 objects = {}
                 if images:
                     document.fixImages(spath, images, objects)
+        idatastream.getMetadata()['cache_key_html'] = cache_key
         idatastream.setData(html)
         idatastream.setSubObjects(objects)
         return idatastream
