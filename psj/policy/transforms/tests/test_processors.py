@@ -9,17 +9,22 @@ from psj.policy.transforms.cmd_oooconv import OPTIONS_HTML
 from psj.policy.transforms.processors import PSJHTMLProcessor
 
 
-
 class PSJHTMLProcessorTests(unittest.TestCase):
 
     def setUp(self):
         self.workdir = tempfile.mkdtemp()
         self.in_path = os.path.join(self.workdir, 'sample.html')
-        self.css_path = os.path.join(self.workdir, 'style.css')
-        open(self.in_path, 'w').write('<html><body>Hi there!<body></html>')
+        self.doc_path = os.path.join(self.workdir, 'sample.doc')
+        input_dir = os.path.join(os.path.dirname(__file__), 'input')
+        self.doc_simple1_path = os.path.join(input_dir, 'simpledoc1.doc')
+        shutil.copy(self.doc_simple1_path, self.doc_path)
+        self.result_path = None
 
     def tearDown(self):
-        shutil.rmtree(self.workdir)
+        if os.path.exists(self.workdir):
+            shutil.rmtree(self.workdir)
+        if self.result_path:
+            shutil.rmtree(os.path.dirname(self.result_path))
 
     @property
     def transform_options(self):
@@ -31,7 +36,11 @@ class PSJHTMLProcessorTests(unittest.TestCase):
 
     def create_source(self):
         # create an additional CSS file for use with the in_path HTML
-        open(self.css_path, 'w').write('p: { \n  text-color: #f00; }')
+        client = Client()
+        self.result_path, cache_key, metadata = client.convert(
+            self.doc_path, self.transform_options)
+        assert self.result_path is not None
+        #self.assertEqual(os.listdir(os.path.dirname(self.result_path)), 'asd')
 
     def test_registered(self):
         # make sure the processor is registered on startup
@@ -44,8 +53,8 @@ class PSJHTMLProcessorTests(unittest.TestCase):
 
     def test_process(self):
         # we can process docs. The result will be the input file, currently.
+        self.create_source()
         proc = PSJHTMLProcessor()
         result_path, metadata = proc.process(
             self.in_path, {'error': False, 'error-descr': ''})
-        assert result_path == self.in_path
         assert metadata == {'error': False, 'error-descr': ''}
