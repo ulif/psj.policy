@@ -36,6 +36,23 @@ class DocumentTests(unittest.TestCase):
         del self.doc
         assert not os.path.isfile(path)
 
+    def test_subobjects_no_files(self):
+        # We get all kinds of files (except .html) when looking for
+        # subobjects.
+        self.doc = Document('mytestdoc.doc', self.doc_simple1)
+        path, filenames = self.doc.subObjects(self.workdir)
+        self.assertEqual(path, self.workdir + '/')
+        self.assertEqual(filenames, [])
+
+    def test_subobjects_usual_image_files(self):
+        # usual image files and css files are found by subObjects()
+        self.doc = Document('mytestdoc.doc', self.doc_simple1)
+        for name in ['fake.gif', 'fake.jpg', 'fake.png', 'styles.css']:
+            open(os.path.join(self.workdir, name), 'w').write('')
+        path, filenames = self.doc.subObjects(self.workdir)
+        assert sorted(filenames) == [
+            'fake.gif', 'fake.jpg', 'fake.png', 'styles.css']
+
     def test_convert(self):
         # We can convert docs to HTML
         self.doc = Document('mytestdoc.doc', self.doc_simple1)
