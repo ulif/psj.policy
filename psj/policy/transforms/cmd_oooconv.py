@@ -22,6 +22,7 @@ Converters using pyuno, i.e. OpenOffice.org in background.
 For conversion to XHTML the commandline tool 'tidy' is needed.
 """
 import os
+import re
 from os.path import isdir
 
 from Products.PortalTransforms.libtransforms.commandtransform import (
@@ -74,6 +75,27 @@ class Document(commandtransform):
             basekeys.append(basekey)
             if hasattr(base, '__del__'):
                 base.__del__(self)
+
+    @classmethod
+    def subObjects(cls, path):
+        """Overwritten from base.
+
+        Return `path` and a list of basenames of allowed files found
+        in `path`. Allowed files are such with filename extension
+        '.png', '.jpg', '.gif', '.css'.
+
+        The ``.css`` filename extension is not allowed in the original
+        method.
+        """
+        filenames = []
+        for filename in os.listdir(path):
+            result = re.match("^.+\.(?P<ext>.+)$", filename)
+            if result is not None:
+                ext = result.group('ext')
+                if ext in ('png', 'jpg', 'gif', 'css'):
+                    filenames.append(filename)
+        path = os.path.join(path, '')
+        return path, filenames
 
     def convert(self, cache_key=None):
         """Convert the document to HTML.
