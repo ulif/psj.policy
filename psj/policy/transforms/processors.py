@@ -19,6 +19,7 @@
 """
 ulif.openoffice processors.
 """
+import os
 from ulif.openoffice.processor import BaseProcessor
 
 
@@ -56,3 +57,14 @@ class PSJHTMLProcessor(BaseProcessor):
         passed in.
         """
         return input_path, metadata
+
+    def get_css(self, dir_path):
+        """Get all paths of CSS files in `dir_path`.
+
+        `dir_path` is the path to some existing directory.
+
+        Returns an iterator over all CSS files with full path.
+        """
+        for name in sorted(os.listdir(dir_path)):
+            if name.endswith('.css'):
+                yield os.path.join(dir_path, name)

@@ -17,6 +17,8 @@ class PSJHTMLProcessorTests(unittest.TestCase):
         self.doc_path = os.path.join(self.workdir, 'sample.doc')
         input_dir = os.path.join(os.path.dirname(__file__), 'input')
         self.doc_simple1_path = os.path.join(input_dir, 'simpledoc1.doc')
+        self.css_sample_path = os.path.join(input_dir, 'sample.css')
+        self.css_sample = open(self.css_sample_path, 'r').read()
         shutil.copy(self.doc_simple1_path, self.doc_path)
         self.result_path = None
 
@@ -40,7 +42,6 @@ class PSJHTMLProcessorTests(unittest.TestCase):
         self.result_path, cache_key, metadata = client.convert(
             self.doc_path, self.transform_options)
         assert self.result_path is not None
-        #self.assertEqual(os.listdir(os.path.dirname(self.result_path)), 'asd')
 
     def test_registered(self):
         # make sure the processor is registered on startup
@@ -55,6 +56,29 @@ class PSJHTMLProcessorTests(unittest.TestCase):
         # we can process docs. The result will be the input file, currently.
         self.create_source()
         proc = PSJHTMLProcessor()
+        # create a sample css
+        open(os.path.join(self.workdir, 'sample.css'), 'w').write(
+            self.css_sample)
         result_path, metadata = proc.process(
             self.in_path, {'error': False, 'error-descr': ''})
         assert metadata == {'error': False, 'error-descr': ''}
+        #dirlist = os.listdir(os.path.dirname(self.result_path))
+        #self.assertEqual(sorted(dirlist), ['sample.css', 'sample.html'])
+        result_dir = os.path.dirname(result_path)
+        return
+        result_css = open(
+            os.path.join(result_dir, 'sample.css'), 'r').read()
+        self.assertEqual(result_css, '''div#psj-doc p{margin-bottom:.21cm;direction:ltr;color:#000;widows:0;orphans:0}div#psj-doc p.western{font-family:"Times New Roman",serif;font-size:12pt;so-language:de-DE}div#psj-doc p.cjk{font-family:"Mincho","msmincho";font-size:12pt;so-language:ja-JP}div#psj-doc p.ctl{font-family:"Lucidasans";font-size:12pt;so-language:zxx}div#psj-doc body{color:#000}div#psj-doc p.c13{background:transparent;font-family:Arial,sans-serif;line-height:150%;margin-bottom:0;orphans:2;widows:2}div#psj-doc span.c12{font-size:80%}div#psj-doc p.c11{background:transparent;font-family:Times New Roman,serif;line-height:150%;margin-bottom:0;orphans:2;widows:2}div#psj-doc p.c10{margin-bottom:0;background:transparent;line-height:150%;widows:2;orphans:2}div#psj-doc span.c9{font-family:Calibri,sans-serif}div#psj-doc span.c8{color:#000;font-family:Calibri,sans-serif;font-weight:bold}div#psj-doc span.c7{color:#000;font-family:Times New Roman,serif;font-weight:bold}div#psj-doc span.c6{color:#000;font-family:Times New Roman,serif}div#psj-doc span.c5{color:#000;font-family:Calibri,sans-serif}div#psj-doc span.c4{font-size:120%}div#psj-doc p.c3{margin-bottom:0;background:transparent;line-height:200%}div#psj-doc span.c2{font-family:Mincho,msmincho}div#psj-doc p.c1{background:transparent;font-family:Mincho,msmincho;line-height:200%;margin-bottom:0}''')
+
+    def test_get_css(self):
+        # we can get css files placed in result.
+        for name in ['foo.html', 'foo.css', 'bar.css', 'baz.css']:
+            open(os.path.join(self.workdir, name), 'w').write('foo')
+        proc = PSJHTMLProcessor()
+        result = list(proc.get_css(self.workdir))
+        self.assertEqual(
+            result, [
+                os.path.join(self.workdir, 'bar.css'),
+                os.path.join(self.workdir, 'baz.css'),
+                os.path.join(self.workdir, 'foo.css'),
+                ])
