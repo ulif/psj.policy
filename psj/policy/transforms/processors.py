@@ -19,7 +19,10 @@
 """
 ulif.openoffice processors.
 """
+import cssutils
+import logging
 import os
+from cStringIO import StringIO
 from ulif.openoffice.processor import BaseProcessor
 
 
@@ -68,3 +71,41 @@ class PSJHTMLProcessor(BaseProcessor):
         for name in sorted(os.listdir(dir_path)):
             if name.endswith('.css'):
                 yield os.path.join(dir_path, name)
+
+    def fix_css(self, css_code):
+        """Fix CSS code in `css_code`.
+
+        'Fixing' here means to
+
+        - drop CSS selectors not referring to basic style sheet
+          selectors (like ``@page``, etc.)
+
+        - modifying remaining selectors by prepending ``#psj-doc ``
+          inside. This way all passed-in style sheet rules should
+          apply to ``#psj-doc`` marked blocks only (and not to all
+          elements in an HTML document).
+
+        - change any `body` selector to select ``#psj-doc`` only.
+
+        Returns the changed CSS code and a string containing any
+        warnings.
+        """
+        logger = logging.getLogger()
+        logger.addHandler(logging.NullHandler())
+        cssutils.log.setLog(logger)  # ignore warnings
+        cssutils.ser.prefs.useDefaults()
+        cssutils.ser.prefs.useMinified()
+
+        sheet = cssutils.parseString(css_code)
+        new_sheet = cssutils.parseString('')  # create a new result sheet
+
+        for rnum, rule in enumerate(sheet.cssRules):
+            if not rule.typeString == 'STYLE_RULE':
+                continue  # ignore non-style rules
+            for snum, selector in enumerate(rule.selectorList):
+                new_selector_text = '#psj-doc %s' % selector.selectorText
+                new_selector_text = new_selector_text.replace(' body', '')
+                rule.selectorList[snum] = cssutils.css.Selector(
+                    new_selector_text)
+            new_sheet.cssRules.append(rule)
+        return new_sheet.cssText
