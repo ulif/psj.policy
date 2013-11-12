@@ -156,9 +156,10 @@ Now we let the portal transforms transform this document:
    ...                             mimetype='application/msword')
    >>> html = data.getData()
    >>> print html
-   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   ...A simple document...
-   </html>
+   <div ...A simple document...
+   </div>
+
+We get a ``<div>`` framed document.
 
 
 The .doc to .pdf transform
@@ -257,9 +258,9 @@ Now we let the portal transforms transform this document:
    ...                             mimetype=cruel_docx_mime_type)
    >>> html = data.getData()
    >>> print html
-   <html xmlns="http://www.w3.org/1999/xhtml">
+   <div...
    ...Auch gibt es niemanden, der den Schmerz an sich liebt...
-   </html>
+   </div>
 
 The .docx to .pdf transform
 ---------------------------

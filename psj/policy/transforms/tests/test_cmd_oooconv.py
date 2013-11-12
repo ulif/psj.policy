@@ -57,7 +57,8 @@ class DocumentTests(unittest.TestCase):
         # We can convert docs to HTML
         self.doc = Document('mytestdoc.doc', self.doc_simple1)
         html, cache_key = self.doc.convert()
-        assert 'A simple document.</p>' in html
+        assert 'A simple document.' in html
+        assert '</p>' in html
         # no cache_dir, no cached doc
         assert cache_key is None
 
@@ -65,7 +66,8 @@ class DocumentTests(unittest.TestCase):
         # We can cache after converting
         self.doc = Document('mytestdoc.doc', self.doc_simple1, self.workdir)
         html, cache_key = self.doc.convert()
-        assert 'A simple document.</p>' in html
+        assert 'A simple document.' in html
+        assert '</p>' in html
         self.assertEqual(cache_key, 'cc8c3b702ca3865608732f612691978b_1_1')
 
     def test_convert_w_cache_key(self):
