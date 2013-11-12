@@ -25,7 +25,7 @@ class PSJHTMLProcessorTests(unittest.TestCase):
     def tearDown(self):
         if os.path.exists(self.workdir):
             shutil.rmtree(self.workdir)
-        if self.result_path:
+        if self.result_path and os.path.exists(self.result_path):
             shutil.rmtree(os.path.dirname(self.result_path))
 
     @property
@@ -53,15 +53,19 @@ class PSJHTMLProcessorTests(unittest.TestCase):
         assert proc.args == []
 
     def test_process(self):
-        # we can process docs. The result will be the input file, currently.
+        # we can process docs. The result will be a doc with a <div> tag
+        # accompanied by a CSS file called ``psj.css``.
         self.create_source()
+        orig_path = self.result_path
         proc = PSJHTMLProcessor()
-        # create a sample css
-        open(os.path.join(self.workdir, 'sample.css'), 'w').write(
-            self.css_sample)
-        result_path, metadata = proc.process(
-            self.in_path, {'error': False, 'error-descr': ''})
+        self.result_path, metadata = proc.process(
+            orig_path, {'error': False, 'error-descr': ''})
         assert metadata == {'error': False, 'error-descr': ''}
+        assert not os.path.exists(orig_path)
+        assert self.result_path != orig_path
+        assert open(self.result_path, 'r').read().startswith('<div')
+        dirlist = os.listdir(os.path.dirname(self.result_path))
+        self.assertEqual(sorted(dirlist), ['psj.css', 'sample.html'])
 
     def test_process_invalid_ext(self):
         # we require a valid filename extension for source path

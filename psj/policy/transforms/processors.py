@@ -22,8 +22,11 @@ ulif.openoffice processors.
 import cssutils
 import logging
 import os
+import shutil
+import tempfile
 from bs4 import BeautifulSoup
 from cStringIO import StringIO
+from ulif.openoffice.helpers import copy_to_secure_location, remove_file_dir
 from ulif.openoffice.processor import BaseProcessor
 
 
@@ -33,6 +36,13 @@ class PSJHTMLProcessor(BaseProcessor):
     As other `ulif.openoffice` docuement processors it works like a
     filter that gets some document, modifies it (or not), and returns
     a path to the resulting document.
+
+    This processor expects some HTML document with accompanied files
+    like images and stylesheets placed in the same directory.
+
+    The resulting HTML document will contain only a ``<div>`` tag
+    filled with the content of the input ``<body>`` tag and a single
+    CSS file ``psj.css`` containing all styles passed in.
 
     The processors' name for use in `ulif.openoffice` pipeline is
     ``psj_html``.
@@ -44,9 +54,9 @@ class PSJHTMLProcessor(BaseProcessor):
     def process(self, path, metadata):
         """Do PSJ-specific adaptions of generated HTML input.
 
-        `input_path` gives any (beforehand) generated HTML
-        document. The path might be located in a directory with
-        additional files (images, etc.) that could also be processed.
+        `path` gives any (beforehand) generated HTML document. The
+        path might be located in a directory with additional files
+        (images, etc.) that could also be processed.
 
         `metadata` is a dictionary of metadata concerning the
         conversion process. It contains at least a key ``error`` with
@@ -65,7 +75,21 @@ class PSJHTMLProcessor(BaseProcessor):
         ext = os.path.splitext(path)[1]
         if ext not in self.supported_extensions:
             return path, metadata
-        return path, metadata
+        basename = os.path.basename(path)
+        src_path = os.path.join(
+            copy_to_secure_location(path), basename)
+        remove_file_dir(path)
+
+        html = self.fix_html(open(src_path, 'r').read())
+        open(src_path, 'wb').write(html.encode('utf-8'))
+
+        css_paths = self.get_css(os.path.dirname(src_path))
+        css = '\n'.join([
+            open(css_path, 'r').read() for css_path in css_paths])
+        css = self.fix_css(css)
+        open(os.path.join(os.path.dirname(src_path), 'psj.css'), 'wb').write(
+            css)
+        return src_path, metadata
 
     def get_css(self, dir_path):
         """Get all paths of CSS files in `dir_path`.
