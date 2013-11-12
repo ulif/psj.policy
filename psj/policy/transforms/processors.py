@@ -78,12 +78,12 @@ class PSJHTMLProcessor(BaseProcessor):
         remove_file_dir(path)
 
         html = self.fix_html(open(src_path, 'r').read())
-        open(src_path, 'wb').write(html.encode('utf-8'))
+        open(src_path, 'w').write(html.encode('utf-8'))
 
         css = self.get_css(os.path.dirname(src_path))
         css = self.fix_css(css)
-        open(os.path.join(os.path.dirname(src_path), 'psj.css'), 'wb').write(
-            css.encode('utf-8'))
+        open(os.path.join(
+            os.path.dirname(src_path), 'psj.css'), 'w').write(css)
         return src_path, metadata
 
     def get_css(self, dir_path):
