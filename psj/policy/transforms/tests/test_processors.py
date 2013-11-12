@@ -78,7 +78,6 @@ class PSJHTMLProcessorTests(unittest.TestCase):
 
     def test_fix_css(self):
         # we can 'fix' code in CSS
-        code = self.css_sample
         proc = PSJHTMLProcessor()
         self.assertEqual(  # empty CSS
             proc.fix_css(''), '')
@@ -94,3 +93,13 @@ class PSJHTMLProcessorTests(unittest.TestCase):
         self.assertEqual(  # 'body' selector replaced
             proc.fix_css('body {color:#000;}'),
             '#psj-doc{color:#000}')
+
+    def test_fix_html(self):
+        # we can 'fix' HTML docs
+        code = ("<html><head><title>t</title></head>"
+                "<body><h1>head</h1></body></html>")
+        proc = PSJHTMLProcessor()
+        self.assertEqual(
+            proc.fix_html(code),
+            '<div id="psj-doc">\n <h1>\n  head\n </h1>\n</div>\n'
+            )

@@ -22,6 +22,7 @@ ulif.openoffice processors.
 import cssutils
 import logging
 import os
+from bs4 import BeautifulSoup
 from cStringIO import StringIO
 from ulif.openoffice.processor import BaseProcessor
 
@@ -109,3 +110,26 @@ class PSJHTMLProcessor(BaseProcessor):
                     new_selector_text)
             new_sheet.cssRules.append(rule)
         return new_sheet.cssText
+
+    def fix_html(self, html_code):
+        """Change ``<body>`` tag to ``<div id="psj-doc">`` tag.
+
+        Removes all markup not inside ``<body>`` originally.
+
+        So::
+
+          <html><head>foo</head><body>bar</body></html>
+
+        becomes::
+
+          <div id="psj-doc">bar</div>
+
+        which can be used inside another HTML document. To fix styles
+        in CSS docs for the new document structure, you can use
+        :meth:`fix_css`.
+        """
+        soup = BeautifulSoup(html_code)
+        body = soup.body
+        body.name = 'div'
+        body['id'] = 'psj-doc'
+        return body.prettify() + '\n'
