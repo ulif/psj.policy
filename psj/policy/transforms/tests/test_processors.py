@@ -78,15 +78,19 @@ class PSJHTMLProcessorTests(unittest.TestCase):
     def test_get_css(self):
         # we can get css files placed in result.
         for name in ['foo.html', 'foo.css', 'bar.css', 'baz.css']:
-            open(os.path.join(self.workdir, name), 'w').write('foo')
+            open(os.path.join(self.workdir, name), 'w').write(
+                'p {name="%s"}\n'% name)
         proc = PSJHTMLProcessor()
-        result = list(proc.get_css(self.workdir))
+        result = proc.get_css(self.workdir)
         self.assertEqual(
-            result, [
-                os.path.join(self.workdir, 'bar.css'),
-                os.path.join(self.workdir, 'baz.css'),
-                os.path.join(self.workdir, 'foo.css'),
-                ])
+            result, ('p {name="bar.css"}\np {name="baz.css"}\n'
+                     'p {name="foo.css"}\n'))
+        # non-css files remain
+        assert os.path.exists(os.path.join(self.workdir, 'foo.html'))
+        # css files are removed
+        assert not os.path.exists(os.path.join(self.workdir, 'foo.css'))
+        assert not os.path.exists(os.path.join(self.workdir, 'bar.css'))
+        assert not os.path.exists(os.path.join(self.workdir, 'baz.css'))
 
     def test_fix_css(self):
         # we can 'fix' code in CSS

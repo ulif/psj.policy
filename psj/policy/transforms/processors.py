@@ -83,24 +83,30 @@ class PSJHTMLProcessor(BaseProcessor):
         html = self.fix_html(open(src_path, 'r').read())
         open(src_path, 'wb').write(html.encode('utf-8'))
 
-        css_paths = self.get_css(os.path.dirname(src_path))
-        css = '\n'.join([
-            open(css_path, 'r').read() for css_path in css_paths])
+        css = self.get_css(os.path.dirname(src_path))
         css = self.fix_css(css)
         open(os.path.join(os.path.dirname(src_path), 'psj.css'), 'wb').write(
-            css)
+            css.encode('utf-8'))
         return src_path, metadata
 
     def get_css(self, dir_path):
-        """Get all paths of CSS files in `dir_path`.
+        """Get contents of all CSS files placed in `dir_path`.
 
         `dir_path` is the path to some existing directory.
 
-        Returns an iterator over all CSS files with full path.
+        The content of all found ``.css`` files is concatenated by
+        ``\n`` and returned.
+
+        .. warn:: This method after reading deletes all CSS files found!
+
         """
+        result = ''
         for name in sorted(os.listdir(dir_path)):
             if name.endswith('.css'):
-                yield os.path.join(dir_path, name)
+                full_path = os.path.join(dir_path, name)
+                result += open(full_path, 'r').read()
+                os.unlink(full_path)
+        return result
 
     def fix_css(self, css_code):
         """Fix CSS code in `css_code`.
