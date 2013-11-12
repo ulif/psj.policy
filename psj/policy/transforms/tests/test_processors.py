@@ -63,6 +63,14 @@ class PSJHTMLProcessorTests(unittest.TestCase):
             self.in_path, {'error': False, 'error-descr': ''})
         assert metadata == {'error': False, 'error-descr': ''}
 
+    def test_process_invalid_ext(self):
+        # we require a valid filename extension for source path
+        proc = PSJHTMLProcessor()
+        path, metadata = proc.process(
+            '/some/filepath/with/invalid_ext.ext', "Fake-Metadata")
+        assert path == '/some/filepath/with/invalid_ext.ext'
+        assert metadata == "Fake-Metadata"
+
     def test_get_css(self):
         # we can get css files placed in result.
         for name in ['foo.html', 'foo.css', 'bar.css', 'baz.css']:

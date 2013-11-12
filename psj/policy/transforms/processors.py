@@ -39,7 +39,9 @@ class PSJHTMLProcessor(BaseProcessor):
     """
     prefix = 'psj_html'
 
-    def process(self, input_path, metadata):
+    supported_extensions = ['.html', '.xhtml']
+
+    def process(self, path, metadata):
         """Do PSJ-specific adaptions of generated HTML input.
 
         `input_path` gives any (beforehand) generated HTML
@@ -60,7 +62,10 @@ class PSJHTMLProcessor(BaseProcessor):
         and ``metadata`` containing the updated ``metadata`` directory
         passed in.
         """
-        return input_path, metadata
+        ext = os.path.splitext(path)[1]
+        if ext not in self.supported_extensions:
+            return path, metadata
+        return path, metadata
 
     def get_css(self, dir_path):
         """Get all paths of CSS files in `dir_path`.
@@ -91,6 +96,8 @@ class PSJHTMLProcessor(BaseProcessor):
         Returns the changed CSS code and a string containing any
         warnings.
         """
+        if isinstance(css_code, list) or isinstance(css_code, tuple):
+            css_code = '\n'.join(css_code)
         logger = logging.getLogger()
         logger.addHandler(logging.NullHandler())
         cssutils.log.setLog(logger)  # ignore warnings
