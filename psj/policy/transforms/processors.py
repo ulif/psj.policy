@@ -22,10 +22,7 @@ ulif.openoffice processors.
 import cssutils
 import logging
 import os
-import shutil
-import tempfile
 from bs4 import BeautifulSoup
-from cStringIO import StringIO
 from ulif.openoffice.helpers import copy_to_secure_location, remove_file_dir
 from ulif.openoffice.processor import BaseProcessor
 

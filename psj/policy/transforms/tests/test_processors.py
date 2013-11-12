@@ -79,7 +79,7 @@ class PSJHTMLProcessorTests(unittest.TestCase):
         # we can get css files placed in result.
         for name in ['foo.html', 'foo.css', 'bar.css', 'baz.css']:
             open(os.path.join(self.workdir, name), 'w').write(
-                'p {name="%s"}\n'% name)
+                'p {name="%s"}\n' % name)
         proc = PSJHTMLProcessor()
         result = proc.get_css(self.workdir)
         self.assertEqual(
