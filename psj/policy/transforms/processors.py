@@ -134,7 +134,7 @@ class PSJHTMLProcessor(BaseProcessor):
         sheet = cssutils.parseString(css_code)
         new_sheet = cssutils.parseString('')  # create a new result sheet
 
-        for rnum, rule in enumerate(sheet.cssRules):
+        for rule in sheet.cssRules:
             if not rule.typeString == 'STYLE_RULE':
                 continue  # ignore non-style rules
             for snum, selector in enumerate(rule.selectorList):
