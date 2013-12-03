@@ -27,6 +27,8 @@ PRODUCT_DEPENDENCIES = ()
 
 def registerTransform(site, out, name, module):
     transforms = getToolByName(site, 'portal_transforms')
+    if name in transforms:
+        unregisterTransform(site, out, name)
     transforms.manage_addTransform(name, module)
     print >> out, "Registered transform", name
     return
