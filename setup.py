@@ -21,7 +21,7 @@ tests_require = [
 
 setup(
     name='psj.policy',
-    version='1.0dev',
+    version='1.0.dev0',
     author='Uli Fouquet',
     author_email='uli@gnufix.de',
     url = 'http://pypi.python.org/pypi/psj.policy',
