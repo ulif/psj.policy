@@ -117,5 +117,5 @@ class PSJHTMLProcessorTests(unittest.TestCase):
         proc = PSJHTMLProcessor()
         self.assertEqual(
             proc.fix_html(code),
-            '<div id="psj-doc">\n <h1>\n  head\n </h1>\n</div>\n'
+            '<div id="psj-doc"><h1>head</h1></div>\n'
             )
