@@ -1,8 +1,10 @@
 from setuptools import setup, find_packages
 import os
 
+
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
+
 
 long_description = (
     read('README.rst')
@@ -24,7 +26,7 @@ setup(
     version='1.0.dev0',
     author='Uli Fouquet',
     author_email='uli@gnufix.de',
-    url = 'http://pypi.python.org/pypi/psj.policy',
+    url='http://pypi.python.org/pypi/psj.policy',
     description='Plone Scholarly Journal - the site policy',
     long_description=long_description,
     license='GPL',
@@ -36,11 +38,14 @@ setup(
                  'Programming Language :: Python',
                  'Operating System :: OS Independent',
                  'Framework :: Plone',
-                 "Topic :: Software Development :: Libraries :: Python Modules",
+                 (
+                     "Topic :: Software Development :: Libraries :: "
+                     "Python Modules"
+                     ),
                  ],
     packages=find_packages(exclude='ez_setup'),
-    namespace_packages = ['psj'],
-    include_package_data = True,
+    namespace_packages=['psj'],
+    include_package_data=True,
     zip_safe=False,
     install_requires=[
         'setuptools',
