@@ -119,3 +119,19 @@ class PSJHTMLProcessorTests(unittest.TestCase):
             proc.fix_html(code),
             '<div id="psj-doc"><h1>head</h1></div>\n'
             )
+
+    def test_proc_always_generates_css(self):
+        # make sure we alway get a CSS file called 'psj.css',
+        # even if no CSS was put in.
+        proc = PSJHTMLProcessor()
+        dir_path = tempfile.mkdtemp()
+        html_path = os.path.join(dir_path, 'sample.html')
+        with open(html_path, 'wb') as fd:
+            fd.write('<html><body><h1>Foo</h1></body></html>')
+        self.result_path, metadata = proc.process(
+            html_path, {'error': False, 'error-descr': ''})
+        result_dir = os.path.dirname(self.result_path)
+        assert sorted(os.listdir(result_dir)) == ['psj.css', 'sample.html']
+        with open(os.path.join(result_dir, 'psj.css'), 'rb') as fd:
+            css = fd.read()
+        assert css == ''
