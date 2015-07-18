@@ -502,46 +502,6 @@ search the catalog for 'Äpfel' and not '&Auml;pfel'::
    >>> 'wünscht' in got
    True
 
-The result should look like the expected output we put in
-``tests/output/testdoc1.html``. There is a problem with numeric
-attributes like '2.5cm' which might differ from machine to machine and
-references to resources like image links. Those might link to any
-temporary directory/file different from run to run. So we define functions
-that strip content, which might validly differ from the local test files::
-
-   >>> import re
-   >>> def rip_out_regexp(regexp_list, text):
-   ...     for regexp in regexp_list:
-   ...         r = re.compile(regexp)
-   ...         text = r.sub('', text)
-   ...     return text
-
-   >>> def rip_out_num_vals(text):
-   ...     r = re.compile('([0-9]?\.)?[0-9]+((cm)|(in)|(pt))')
-   ...     result = r.sub('', text)
-   ...     result = re.compile('src="[^"]+"').sub('', result)
-   ...     return result
-
-   >>> regexp_list = ('meta name="CREATED" content="[^"]+"',
-   ...                'meta name="CHANGED" content="[^"]+"',
-   ...                'meta name="GENERATOR" content="[^"]+"',)
-   >>> expected_html = join(output_path, 'testdoc1.html')
-   >>> expected_data = open(expected_html, 'r').read()
-
-   >>> expected_data = rip_out_num_vals(expected_data)
-   >>> expected_data = rip_out_regexp(regexp_list, expected_data)
-
-   >>> open('mydoc.html', 'wb').write(got)
-
-   >>> got = rip_out_num_vals(got)
-   >>> got = rip_out_regexp(regexp_list, got)
-   
-   >>> diff = difflib.unified_diff(expected_data.split('\n'),
-   ...                             got.split('\n'))
-
-XXX   >>> list(diff)
-   []
-
 
 Handle foreign character sets correctly
 ---------------------------------------
