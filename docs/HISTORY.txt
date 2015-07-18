@@ -4,6 +4,8 @@ Changelog
 1.1.dev0 (unreleased)
 =====================
 
+* Removed outdated scripts.
+
 * The `psj_html` processor now delivers unprettified HTML output.
   This can avoid gaps in rendered HTML output.
 
