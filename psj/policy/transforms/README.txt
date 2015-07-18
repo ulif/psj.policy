@@ -297,17 +297,20 @@ Convert the virtual document to HTML (using OOo)
 ------------------------------------------------
 
    >>> document = Document('myodtdoc', content_in)
-
-XXX   >>> output = document.convert()
-XXX   >>> output
-
-XXX   '<html xmlns="http://www.w3.org/1999/xhtml">\n<head>\n...'
+   >>> output, cache_key = document.convert()
+   >>> output
+   '<div ...</div>\n'
 
 Convert the virtual document to PDF/A (using OOo)
 -------------------------------------------------
 
 We cannot only convert data to HTML but also to PDF::
 
+XXX
+XXX Why do we have to create a new doc each time after convert()?
+XXX
+
+   >>> document = Document('myodtdoc', content_in)
    >>> output, cache_key = document.convertToPDF()
 
 The ``output`` variable now contains our PDF document::
@@ -355,15 +358,15 @@ To perform this step, a virtual document has to be created first::
 As we can see, the virtual document name can be different from the
 original. Now we convert this document to HTML::
 
-XXX   >>> html = document.convert()
-XXX   >>> print html
-XXX   <html xmlns="http://www.w3.org/1999/xhtml">
+   >>> html, cache_key = document.convert()
+   >>> print html
+   <div dir="ltr" id="psj-doc" lang="de-DE">
    ...
-   </body>
-   </html>
+   </div>
 
 Also conversion to PDF/A is possible::
 
+   >>> document = Document('mydoc1.doc', content_in)
    >>> pdf, cache_key = document.convertToPDF()
    >>> pdf[:20]
    '%PDF-1.4\n%...'
@@ -381,15 +384,13 @@ Converting .docx files with OOo
 Now we care for the newer docx file type, load a sample document and
 convert it to HTML::
 
-XXX   >>> input_file_path = join(input_path, 'testdoc1.docx')
-XXX   >>> document = Document('mydoc1.docx', content_in)
-XXX   >>> html = document.convert()
-
-XXX   >>> print html
-XXX   <html xmlns="http://www.w3.org/1999/xhtml">
+   >>> input_file_path = join(input_path, 'testdoc1.docx')
+   >>> document = Document('mydoc1.docx', content_in)
+   >>> html, cache_key = document.convert()
+   >>> print html
+   <div dir="ltr" id="psj-doc" lang="de-DE">
    ...
-   </body>
-   </html>
+   </div>
 
 Converting to PDF is easy as well::
 
@@ -398,7 +399,7 @@ Converting to PDF is easy as well::
    >>> pdf[:20]
    '%PDF-1.4\n%...'
 
-   >>> len(output) > 1100000
+   >>> len(pdf) > 1100000
    True
 
    >>> cache_key is None
@@ -409,7 +410,7 @@ Transform data from .odt files
 ==============================
 
 Transformations, different to simple conversions, take care of MIME
-types and handle data in so-called `datastreams`. 
+types and handle data in so-called `datastreams`.
 
 We now want to *transform* the ``testdoc1.odt`` document. For this, we
 must create a transformation object first, which afterwards can
@@ -438,9 +439,6 @@ A transform should alway provide ``itransform``::
    >>> verifyObject(itransform, transform)
    True
 
-XXX: The interface implementations (and checks of them) here are old
-Zope 2, because ``itransform`` is. This should be fixed in
-``PortalTransforms``.
 
 Transformations provide a name::
 
@@ -477,7 +475,7 @@ stored::
 
 Now we can perform the real conversion in a transformation context::
 
-   >>> res_data = transform.convert(raw_odt, data, 
+   >>> res_data = transform.convert(raw_odt, data,
    ...                              filename='testdoc1.odt')
 
 Thre result stream should implement ``idatastream``::
@@ -490,11 +488,10 @@ This stream can be read. We get the data::
 
    >>> got = res_data.getData()
 
-XXX   >>> print got
-   <html xmlns="http://www.w3.org/1999/xhtml">
-   <head>
+   >>> print got
+   <div dir="ltr" id="psj-doc" lang="de-DE">
    ...
-   </html>
+   </div>
 
 There should be no 'HTML encoding' of characters, because users will
 search the catalog for 'Äpfel' and not '&Auml;pfel'::
@@ -565,17 +562,14 @@ stored::
 
 Now we can perform the real conversion in a transformation context::
 
-   >>> res_data = transform.convert(raw_odt, data, 
+   >>> res_data = transform.convert(raw_odt, data,
    ...                              filename='testdoc2.odt')
    >>> got = res_data.getData()
 
-XXX   >>> print got
-XXX   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-XXX   ...
-XXX   <html xmlns="http://www.w3.org/1999/xhtml">
-XXX   <head>
-XXX   ...
-XXX   </html>
+   >>> print got
+   <div dir="ltr" id="psj-doc" lang="de-DE" xml:lang="de-DE">
+   ...
+   </div>
 
 There are real japanese Characters in the document::
 
@@ -585,7 +579,7 @@ There are real japanese Characters in the document::
 
 There are real arabic Characters in the document::
 
-   >>> 'xml:lang="ar-SA">\n   \xd8\xa7\xd9\x84\xd8\xa7\xd8' in got
+   >>> 'xml:lang="ar-SA">\xd8\xa7\xd9\x84\xd8\xa7\xd8' in got
    True
 
 There are real cyrillic characters in the document::
@@ -650,18 +644,17 @@ stored::
 
 Now we can perform the real conversion in a transformation context::
 
-   >>> res_data = transform.convert(raw_doc, data, 
+   >>> res_data = transform.convert(raw_doc, data,
    ...                              filename='testdoc1.doc')
 
 This stream can be read. We get the data::
 
    >>> got = res_data.getData()
 
-XXX   >>> print got
-   <html xmlns="http://www.w3.org/1999/xhtml">
-   <head>
+   >>> print got
+   <div dir="ltr" id="psj-doc" lang="de-DE">
    ...
-   </html>
+   </div>
 
 There should be no 'HTML encoding' of characters, because users will
 search the catalog for 'Äpfel' and not '&Auml;pfel'::

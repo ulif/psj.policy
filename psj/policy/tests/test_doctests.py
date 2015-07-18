@@ -26,5 +26,9 @@ def test_suite():
             'README.txt', package='psj.policy',
             test_class=FunctionalTestCase),
 
+        ztc.FunctionalDocFileSuite(
+            'README.txt', package='psj.policy.transforms',
+             test_class=FunctionalTestCase),
+
         ])
     return suite
