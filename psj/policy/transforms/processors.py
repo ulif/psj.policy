@@ -52,9 +52,11 @@ class PSJHTMLProcessor(BaseProcessor):
         Argument('-psj-html-inline-css', '--psj-html-inline-css',
                  type=boolean, default=False,
                  metavar='YES|NO',
-                 help='Whether to place the CSS code inlined in '
-                      'generated HTML (no extra CSS file). Default: no',
-                 ),
+                 help=
+                    'Whether to place the CSS code inlined in '
+                    'generated HTML (no extra CSS file)'
+                    'Default: no',
+        ),
     ]
 
     supported_extensions = ['.html', '.xhtml']
