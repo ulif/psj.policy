@@ -24,8 +24,6 @@ import logging
 import os
 from bs4 import BeautifulSoup
 from ulif.openoffice.helpers import copy_to_secure_location, remove_file_dir
-from ulif.openoffice.helpers import strict_string_to_bool as boolean
-from ulif.openoffice.options import Argument
 from ulif.openoffice.processor import BaseProcessor
 
 
@@ -47,17 +45,6 @@ class PSJHTMLProcessor(BaseProcessor):
     ``psj_html``.
     """
     prefix = 'psj_html'
-
-    args = [
-        Argument('-psj-html-inline-css', '--psj-html-inline-css',
-                 type=boolean, default=False,
-                 metavar='YES|NO',
-                 help=
-                    'Whether to place the CSS code inlined in '
-                    'generated HTML (no extra CSS file)'
-                    'Default: no',
-        ),
-    ]
 
     supported_extensions = ['.html', '.xhtml']
 

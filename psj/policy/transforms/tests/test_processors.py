@@ -3,7 +3,6 @@ import os
 import shutil
 import tempfile
 import unittest
-from argparse import ArgumentParser
 from ulif.openoffice.client import Client
 from ulif.openoffice.helpers import get_entry_points
 from psj.policy.transforms.cmd_oooconv import OPTIONS_HTML
@@ -50,22 +49,8 @@ class PSJHTMLProcessorTests(unittest.TestCase):
 
     def test_args(self):
         # currently, we have no args to process
-        parser = ArgumentParser()
-        for arg in PSJHTMLProcessor.args:
-            parser.add_argument(
-                arg.short_name, arg.long_name, **arg.keywords)
-        result = vars(parser.parse_args([]))
-        # defaults
-        assert result == {
-            'psj_html_inline_css': False,
-        }
-        # explicitly set value (different from default)
-        result = vars(parser.parse_args(['-psj-html-inline-css', 'yes']))
-        assert result == {
-            'psj_html_inline_css': True,
-        }
-        #proc = PSJHTMLProcessor()
-        #assert proc.args == []
+        proc = PSJHTMLProcessor()
+        assert proc.args == []
 
     def test_process(self):
         # we can process docs. The result will be a doc with a <div> tag
