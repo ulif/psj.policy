@@ -296,7 +296,6 @@ the ``cmd_oooconv`` module::
 Convert the virtual document to HTML (using OOo)
 ------------------------------------------------
 
-   >>> document = Document('myodtdoc', content_in)
    >>> output, cache_key = document.convert()
    >>> output
    '<div ...</div>\n'
