@@ -36,8 +36,12 @@ You need the following things to install this package:
   Currently Python 2.6 or 2.7 is needed to run Zope (Plone and
   psj). Python 2.7 is recommended.
 
-  Also `python-dev` and the usual build tools are needed to build the
-  devel environment.
+  The package also requires libxml2-dev and libxslt-dev to compile the
+  Python lxml package.
+
+  Debian/Ubuntu users can install it via::
+
+    $ sudo apt-get install python-dev
 
 - **git**
 
@@ -47,6 +51,16 @@ You need the following things to install this package:
   Debian/Ubuntu users can install it via::
 
     $ sudo apt-get install git
+
+- **libxml, libxslt**
+
+  `libxml2` and `libxslt` are required for `lxml` support required by
+  this package. The development versions of this packages are needed
+  to have access to the respective header files.
+
+  Debian/Ubuntu users can install them via::
+
+    $ sudo apt-get install libxml2-dev libxslt-dev
 
 
 Installation
