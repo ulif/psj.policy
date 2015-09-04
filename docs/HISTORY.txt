@@ -9,6 +9,9 @@ Changelog
 * The `psj_html` processor now delivers unprettified HTML output.
   This can avoid gaps in rendered HTML output.
 
+* Added MANIFEST.in to also package .txt files in docs/. Thanks
+  to Dieter Maurer for the hint!
+
 
 1.0 (2015-07-16)
 =====================
