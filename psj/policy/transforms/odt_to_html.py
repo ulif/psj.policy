@@ -53,10 +53,10 @@ class Odt2Html(OOOTransformBase):
         html, cache_key = document.convert(cache_key=cache_key)
         sub_objects_paths = [document.tmpdir,
                              os.path.join(document.tmpdir, 'Pictures')]
+        objects = {}
         for path in sub_objects_paths:
             if os.path.exists(path):
                 spath, images = document.subObjects(path)
-                objects = {}
                 if images:
                     document.fixImages(spath, images, objects)
         idatastream.getMetadata()['cache_key_html'] = cache_key
