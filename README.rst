@@ -4,18 +4,20 @@ psj.policy
 A package that defines the site policy of a PloneScholarlyJournal
 site.
 
+`sources <https://github.com/ulif/psj.policy>`_ | `issues <https://github.com/ulif/psj.policy/issues>`_
+
 The ``Plone Scholarly Journal`` (PSJ) is a collection of packages to
 create and maintain scientific scholarly journals using Plone.
 
 The special abilities of PSJ are:
 
 - High quality on-the-fly transformations of office documents using
-  OpenOffice.org.
+  OpenOffice/LibreOffice.
 
 - Flexible metadata handling
 
 This package contains the transforms to generate HTML and PDF docs
-from input files in office format (``.doc``, ``.docx``, LibreOffice
+from input files in office formats (``.doc``, ``.docx``, LibreOffice
 docs).
 
 Currently, the whole thing consists of three packages:
