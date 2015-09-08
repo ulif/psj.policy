@@ -54,7 +54,7 @@ You need the following things to install this package:
 
     $ sudo apt-get install git
 
-- **libxml, libxslt, libz**
+- **libxml, libxslt, zlib**
 
   `libxml2`, `libxslt`, and the `zlib` compression library are
   required for `lxml` support required by this package. The
@@ -68,7 +68,6 @@ You need the following things to install this package:
   (tested on Ubuntu 14.04.2)
 
 
-
 Installation
 ============
 
@@ -79,6 +78,12 @@ Using `zc.buildout`
 -------------------
 
 We use `zc.buildout` to build a runnable, testable `psj` environment.
+
+As first step we get the sources from github and change to the newly
+created dir::
+
+    $ git clone https://github.com/ulif/psj.policy
+    $ cd psj.policy
 
 Bootstrap the initial buildout environment::
 
