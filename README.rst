@@ -67,15 +67,19 @@ You need the following things to install this package:
 
   (tested on Ubuntu 14.04.2)
 
-- **unoconv**
+- **unoconv, tidy**
 
   `unoconv` is the commandline tool we use for transforms behind the
   scene. Strictly speaking it is not required (everything will install
   without it), but if you want any transforms, you will need it.
 
-  Debian/Ubuntu users can install it via::
+  `tidy` is also a commandline helper. It is needed for cleaning up
+  HTML code. Not strictly required, but you will need it if you want
+  flawless workflows.
 
-    $ sudo apt-get install unoconv
+  Debian/Ubuntu users can install these tools via::
+
+    $ sudo apt-get install unoconv tidy
 
   (tested on Ubuntu 14.04.2)
 
