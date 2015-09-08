@@ -55,7 +55,6 @@ setup(
         'ulif.openoffice',
         'Plone',
         'Products.Archetypes',
-        'restclient',
         ],
     tests_require=tests_require,
     extras_require={
