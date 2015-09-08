@@ -65,12 +65,12 @@ class Doc2PdfTests(unittest.TestCase):
         # we have proper mimetypes set
         transform = Doc2Pdf()
         self.assertEqual(transform.output, 'application/pdf')
-        self.assertEqual(transform.output_encoding, 'utf-8')
         self.assertEqual(
             transform.inputs,
             ('application/msword',
              'application/vnd.openxmlformats-officedocument' +
              '.wordprocessingml.document'))
+        assert getattr(transform, 'output_encoding', None) is None
 
     def test_name(self):
         # we can get the transform name
