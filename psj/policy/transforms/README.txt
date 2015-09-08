@@ -644,9 +644,6 @@ instance of the real transformation class by calling ``register()``
    >>> transform.output
    'application/pdf'
 
-   >>> transform.output_encoding
-   'utf-8'
-
 We grab a testdocument again to transform it::
 
    >>> input_file_path = join(input_path, 'testdoc1.doc')
