@@ -54,15 +54,19 @@ You need the following things to install this package:
 
     $ sudo apt-get install git
 
-- **libxml, libxslt**
+- **libxml, libxslt, libz**
 
-  `libxml2` and `libxslt` are required for `lxml` support required by
-  this package. The development versions of this packages are needed
-  to have access to the respective header files.
+  `libxml2`, `libxslt`, and the `zlib` compression library are
+  required for `lxml` support required by this package. The
+  development versions of this packages are needed to have access to
+  the respective header files.
 
   Debian/Ubuntu users can install them via::
 
-    $ sudo apt-get install libxml2-dev libxslt-dev
+    $ sudo apt-get install libxml2-dev libxslt-dev zlib1g-dev
+
+  (tested on Ubuntu 14.04.2)
+
 
 
 Installation
