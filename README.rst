@@ -67,6 +67,18 @@ You need the following things to install this package:
 
   (tested on Ubuntu 14.04.2)
 
+- **unoconv**
+
+  `unoconv` is the commandline tool we use for transforms behind the
+  scene. Strictly speaking it is not required (everything will install
+  without it), but if you want any transforms, you will need it.
+
+  Debian/Ubuntu users can install it via::
+
+    $ sudo apt-get install unoconv
+
+  (tested on Ubuntu 14.04.2)
+
 
 Installation
 ============
