@@ -4,7 +4,11 @@ Changelog
 1.1.1.dev0 (unreleased)
 =======================
 
-* No changes yet.
+* Fix overwriting of subobjects during transforms.
+
+* Removed dependency from `restclient`.
+
+* Do not set `output_encoding` of transformed PDF docs.
 
 
 1.1 (2015-09-04)
