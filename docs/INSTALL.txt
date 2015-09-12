@@ -4,7 +4,7 @@ psj.policy Installation
 How to install psj.policy inside another package
 ================================================
 
-To install psj.policy into the global Python environment (or a workingenv),
+To install psj.policy into the global Python environment (or a virtualenv),
 using a traditional Zope 2 instance, you can do this:
 
  * When you're reading this you have probably already run
@@ -91,21 +91,12 @@ this.
 
 2) Install additional packages:
 
-  We need Python2.4. On our system this is the default version.  So we
+  We need Python2.7. On our system this is the default version.  So we
   can try to do::
 
-     # apt-get install python2.4-dev
+     # apt-get install python2.7-dev
 
-  to get the headers for building Zope. More current distributions
-  often come with Python2.5 as default and do not offer any Python2.4
-  packages any more. In this case you have to grab the sources from
-  http://www.python.org/ and install Python2.4 by yourself.
-
-  After Python 2.4 is installed, you should be able to type::
-
-     $ python2.4
-
-  without an error message.
+  to get the headers for building Zope.
 
   Then, as superuser, do::
 
@@ -114,15 +105,15 @@ this.
                        libsm6 sun-java5-bin \
                        libjpeg62 libjpeg62-dev libfreetype6 \
                        libfreetype6-dev tidy \
-                       xvfb python2.4-profiler
+                       xvfb python2.7-profiler
 
   These are the generally needed packages for building and running
-  ``psj.policy``. The latter package (``python2.4-profiler``) is not
+  ``psj.policy``. The latter package (``python2.7-profiler``) is not
   needed, if you installed from sources. Some of the packages may be
   already installed on your system. Concerning the Java package (above
   Sun Java 1.5 is installed) you might get along with a different one.
 
-  The tidy package is needed for postprocessing of HTML docs.
+  The `tidy` package is needed for postprocessing of HTML docs.
 
   The libsm6 and xvfb packages are needed for the X-server
   requirements of OOo. You don't have to run a X-server with this
@@ -147,14 +138,13 @@ this.
 
   Now it's time to get the real code. As a normal user do::
 
-     $ svn co https://svn.gnufix.de/repos/psj.policy/trunk \
-              psj.policy
+     $ git clone https://github.com/ulif/psj.policy
 
   This should populate your directory with a new subdir
   ``psj.policy``. Now change to it and run the bootstrapper::
 
      $ cd psj.policy
-     $ python2.4 bootstrap/bootstrap.py
+     $ python2.7 bootstrap/bootstrap.py
 
   This will create the ``buildout`` script and some subdirs. Run the
   buildout script::
